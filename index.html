@@ -1,0 +1,2299 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#16123a">
+<meta name="description" content="مدرسة الأبطال - منصة تعليمية مجانية للأطفال (الصف الثاني الابتدائي - المنهج المصري)">
+<title>مدرسة الأبطال | Heroes Academy</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;700;800&family=Baloo+Bhaijaan+2:wght@500;700;800&family=Bangers&display=swap" rel="stylesheet">
+<style>
+/* ============ الأساسيات والألوان (تتغير حسب البطل) ============ */
+:root{
+  --ink:#16123a; --pop:#ffd400; --ok:#19b34f; --bad:#ee3a3a; --paper:#ffffff; --soft:#eef0ff;
+  --main:#e62429; --main-ink:#ffffff; --bg-a:#1c2f9a; --bg-b:#a5121f;
+  --sh:5px 5px 0 var(--ink); --r:18px;
+}
+body[data-hero="spiderman"]{--main:#e62429;--main-ink:#fff;--bg-a:#1c2f9a;--bg-b:#a5121f}
+body[data-hero="batman"]{--main:#ffc400;--main-ink:#16123a;--bg-a:#0f1120;--bg-b:#343b63}
+body[data-hero="superman"]{--main:#1f5bff;--main-ink:#fff;--bg-a:#0b2a80;--bg-b:#c2141c}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0}
+body{
+  font-family:"Baloo Bhaijaan 2","Cairo","Segoe UI",Tahoma,system-ui,sans-serif;
+  color:#fff;min-height:100vh;min-height:100dvh;line-height:1.5;overflow-x:hidden;
+  padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
+}
+body.lang-en{font-family:"Baloo 2","Baloo Bhaijaan 2","Segoe UI",system-ui,sans-serif}
+button,input{font-family:inherit}
+#bg{position:fixed;inset:0;z-index:-1;
+  background:radial-gradient(rgba(0,0,0,.2) 22%,transparent 24%) 0 0/14px 14px,linear-gradient(160deg,var(--bg-a),var(--bg-b))}
+#fx{position:fixed;inset:0;pointer-events:none;overflow:hidden;z-index:80}
+#app{max-width:560px;margin:0 auto;padding:12px 14px 48px}
+h1,h2,h3,p{margin:0}
+[hidden]{display:none!important}
+
+/* ============ عناصر عامة ============ */
+.panel{background:var(--paper);color:var(--ink);border:4px solid var(--ink);border-radius:var(--r);box-shadow:var(--sh);padding:16px}
+.glass{background:rgba(255,255,255,.14);border:3px solid rgba(255,255,255,.55);border-radius:var(--r);padding:12px 14px}
+.center{text-align:center}
+.lead{font-size:1.1rem;font-weight:500;margin:6px 0 12px}
+.lbl{display:block;font-weight:800;font-size:1.05rem;margin:14px 0 6px}
+.err{color:var(--bad);font-weight:800;min-height:1.6em;margin:6px 0}
+.title-pop{font-weight:800;color:#fff;-webkit-text-stroke:3px var(--ink);paint-order:stroke fill;text-shadow:4px 4px 0 var(--ink);letter-spacing:.01em}
+body.lang-en .title-pop,.brand-en{font-family:"Bangers","Baloo 2",system-ui,sans-serif;font-weight:400;letter-spacing:.05em}
+.btn{display:flex;align-items:center;justify-content:center;gap:10px;width:100%;min-height:62px;padding:10px 18px;
+  border:4px solid var(--ink);border-radius:16px;background:var(--main);color:var(--main-ink);
+  font-size:1.3rem;font-weight:800;cursor:pointer;box-shadow:0 6px 0 var(--ink);transition:transform .08s,box-shadow .08s}
+.btn:active{transform:translateY(5px);box-shadow:0 1px 0 var(--ink)}
+.btn:focus-visible,.opt:focus-visible,.subject:focus-visible,.lesson:focus-visible,.hero-card:focus-visible,.iconbtn:focus-visible,.input:focus-visible{outline:4px solid var(--pop);outline-offset:3px}
+.btn.alt{background:#fff;color:var(--ink)}
+.btn.green{background:var(--ok);color:#fff}
+.btn.danger{background:var(--bad);color:#fff}
+.btn.small{min-height:48px;font-size:1.05rem}
+.btn+.btn{margin-top:14px}
+.input{width:100%;font-size:1.3rem;font-weight:700;padding:12px 16px;border-radius:14px;border:4px solid var(--ink);color:var(--ink);background:#fff;text-align:start}
+.iconbtn{width:44px;height:44px;flex:none;border-radius:12px;border:3px solid var(--ink);background:#fff;color:var(--ink);font-size:22px;cursor:pointer;box-shadow:0 4px 0 var(--ink)}
+.iconbtn:active{transform:translateY(3px);box-shadow:0 1px 0 var(--ink)}
+.screen.enter{animation:slideIn .35s ease}
+
+/* ============ الشريط العلوي ============ */
+.topbar{display:flex;align-items:center;gap:10px;background:#fff;color:var(--ink);border:4px solid var(--ink);border-radius:var(--r);box-shadow:var(--sh);padding:8px 10px;margin-bottom:16px}
+.avatar{width:54px;height:54px;flex:none;border-radius:50%;border:4px solid var(--ink);display:grid;place-items:center;font-size:30px;cursor:pointer;
+  background:linear-gradient(135deg,var(--c1),var(--c2))}
+.who{flex:1;min-width:0}
+.who b{display:block;font-size:1.1rem;font-weight:800;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;line-height:1.3}
+.who small{display:block;font-weight:700;color:#4b4f7a;line-height:1.2}
+.xpbar{height:12px;border:2px solid var(--ink);background:#dfe3ff;border-radius:99px;overflow:hidden;margin-top:4px}
+.xpbar>i{display:block;height:100%;background:linear-gradient(90deg,#ffd400,#ff8a00);transition:width .5s}
+
+/* ============ شاشة البداية ============ */
+.hero-banner{text-align:center;padding:6px 0 16px}
+.hero-banner .badges{display:flex;justify-content:center;gap:10px;font-size:40px;margin-bottom:4px}
+.hero-banner .badges span{animation:float 2.4s ease-in-out infinite;filter:drop-shadow(3px 3px 0 var(--ink))}
+.hero-banner .badges span:nth-child(2){animation-delay:.4s}.hero-banner .badges span:nth-child(3){animation-delay:.8s}
+.hero-banner h1{font-size:2.9rem;line-height:1.1}
+.hero-banner .tag{font-weight:700;margin-top:6px;font-size:1.05rem}
+.hero-pick{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.hero-card{background:#fff;color:var(--ink);border:4px solid var(--ink);border-radius:16px;padding:10px 4px;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:6px;font-weight:800;box-shadow:0 5px 0 var(--ink);transition:transform .12s}
+.hero-card .hbadge{width:64px;height:64px;border-radius:50%;border:4px solid var(--ink);display:grid;place-items:center;font-size:34px;background:linear-gradient(135deg,var(--c1),var(--c2))}
+.hero-card.selected{background:var(--pop);transform:translateY(-4px) rotate(-2deg);box-shadow:0 9px 0 var(--ink)}
+
+/* ============ لوحة المواد ============ */
+.greet{display:flex;align-items:center;gap:12px;margin-bottom:14px}
+.greet .gpic{width:64px;height:64px;flex:none;border-radius:50%;border:4px solid var(--ink);display:grid;place-items:center;font-size:36px;background:linear-gradient(135deg,var(--c1),var(--c2))}
+.greet h2{font-size:1.5rem}
+.section{font-size:1.3rem;margin:4px 4px 10px}
+.subjects{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.subject{position:relative;border:4px solid var(--ink);border-radius:20px;padding:14px 8px 12px;min-height:158px;color:#fff;cursor:pointer;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;background:var(--sc);box-shadow:var(--sh);transition:transform .1s}
+.subject:active{transform:translate(4px,4px);box-shadow:1px 1px 0 var(--ink)}
+.subject .ic{font-size:44px;filter:drop-shadow(2px 3px 0 rgba(0,0,0,.35))}
+.subject b{font-size:1.2rem;font-weight:800;line-height:1.2;text-align:center;text-shadow:2px 2px 0 rgba(0,0,0,.35)}
+.subject small{font-weight:700;opacity:.95;text-align:center;line-height:1.2}
+.subject .mini{width:82%;height:10px;border:2px solid var(--ink);background:rgba(0,0,0,.3);border-radius:9px;overflow:hidden;margin-top:4px}
+.subject .mini i{display:block;height:100%;background:#fff}
+.subject.last::after{content:attr(data-badge);position:absolute;top:-10px;inset-inline-end:8px;background:var(--pop);color:var(--ink);border:3px solid var(--ink);padding:0 8px;border-radius:10px;font-size:.8rem;font-weight:800;transform:rotate(3deg)}
+
+/* ============ الدروس ============ */
+.headrow{display:flex;align-items:center;gap:10px;margin-bottom:14px}
+.headrow h2{font-size:1.5rem;line-height:1.25}
+.unit{margin:18px 4px 8px;font-weight:800;font-size:1.05rem}
+.lesson{display:flex;align-items:center;gap:12px;width:100%;text-align:start;border:4px solid var(--ink);background:#fff;color:var(--ink);border-radius:18px;padding:10px 12px;
+  box-shadow:0 5px 0 var(--ink);cursor:pointer;margin-bottom:14px;min-height:76px;font-size:1rem}
+.lesson:active{transform:translateY(4px);box-shadow:0 1px 0 var(--ink)}
+.lesson .lic{width:56px;height:56px;flex:none;border:3px solid var(--ink);border-radius:14px;display:grid;place-items:center;font-size:30px;background:var(--sc)}
+.lesson .lt{flex:1;min-width:0}
+.lesson .lt b{display:block;font-size:1.1rem;font-weight:800;line-height:1.3}
+.lesson .lt small{font-weight:700;color:#4b4f7a}
+.stars{font-size:1.05rem;letter-spacing:1px;white-space:nowrap}
+.stars .off{filter:grayscale(1);opacity:.3}
+
+/* ============ ساحة المعركة ============ */
+.stage{position:relative;display:flex;align-items:flex-end;justify-content:space-between;gap:6px;background:rgba(255,255,255,.16);border:4px solid var(--ink);border-radius:var(--r);padding:12px 10px;margin-bottom:14px;overflow:hidden}
+.fighter{flex:1;text-align:center;position:relative}
+.fig{display:inline-grid;place-items:center;line-height:1;position:relative}
+.fig.hero{width:84px;height:84px;border-radius:50%;border:4px solid var(--ink);font-size:46px;background:linear-gradient(135deg,var(--c1),var(--c2));box-shadow:4px 4px 0 var(--ink)}
+.fig.villain{font-size:70px;filter:drop-shadow(4px 4px 0 var(--ink))}
+.fig.villain.defeated{filter:grayscale(1) drop-shadow(3px 3px 0 var(--ink));transform:rotate(-14deg) scale(.9)}
+.nm{font-weight:800;font-size:.95rem;margin-top:6px;text-shadow:2px 2px 0 var(--ink)}
+.hp{height:14px;border:3px solid var(--ink);background:rgba(0,0,0,.4);border-radius:9px;overflow:hidden;margin:4px auto 0;width:90%}
+.hp i{display:block;height:100%;background:var(--bad);transition:width .5s}
+.vs{align-self:center;font-family:"Bangers",system-ui,sans-serif;font-size:2rem;color:var(--pop);-webkit-text-stroke:2px var(--ink);paint-order:stroke fill;text-shadow:3px 3px 0 var(--ink)}
+.cage{position:absolute;inset:-10px;display:none;place-items:center;font-size:92px;opacity:.92;pointer-events:none}
+.trapped .cage{display:grid;animation:pop .3s}
+.trapped .fig.hero{animation:shake .45s}
+.jump .fig.hero{animation:jump .7s}
+.hit .fig.villain{animation:shake .45s}
+.loop .fig.hero{animation:jump 1.2s infinite}
+.burst-wrap{position:absolute;inset:0;display:grid;place-items:center;pointer-events:none;z-index:3}
+.burst{min-width:150px;padding:26px 30px;font-family:"Bangers","Baloo 2",system-ui,sans-serif;font-size:2.1rem;color:var(--ink);text-align:center;line-height:1;
+  background:var(--pop);clip-path:polygon(50% 0,60% 18%,78% 6%,78% 26%,98% 24%,88% 42%,100% 55%,84% 64%,94% 84%,74% 80%,68% 98%,54% 84%,40% 100%,32% 82%,12% 90%,18% 70%,0 60%,14% 46%,4% 28%,24% 28%,26% 8%,42% 20%);
+  animation:burst .9s forwards}
+.burst.bad{background:#cfd3f5}
+body:not(.lang-en) .burst{font-family:"Baloo Bhaijaan 2",system-ui,sans-serif;font-weight:800}
+.xp-float{position:absolute;top:6px;inset-inline-start:42%;font-weight:800;font-size:1.7rem;color:var(--pop);-webkit-text-stroke:2px var(--ink);paint-order:stroke fill;text-shadow:2px 2px 0 var(--ink);animation:floatUp 1.3s forwards;z-index:4}
+
+/* ============ السؤال ============ */
+.qvis{white-space:pre-line}
+.vert{font-family:"Courier New",ui-monospace,monospace;direction:ltr;unicode-bidi:isolate;white-space:pre;text-align:center;font-size:2rem;font-weight:800;line-height:1.25;background:var(--soft);border:3px dashed var(--ink);border-radius:14px;padding:8px 18px;width:max-content;max-width:100%;margin:6px auto 10px;color:var(--ink)}
+.note{background:#fff7cc;border:3px solid var(--ink);border-radius:14px;padding:10px 12px;font-weight:700;line-height:1.8;margin:0 0 14px;color:var(--ink);box-shadow:3px 3px 0 var(--ink)}
+.note b{display:block;margin-bottom:2px}
+
+.qprog{display:flex;align-items:center;gap:10px;font-weight:800;margin-bottom:12px}
+.qprog .bar{flex:1;height:16px;border:3px solid var(--ink);background:rgba(0,0,0,.35);border-radius:99px;overflow:hidden}
+.qprog .bar i{display:block;height:100%;background:var(--pop);transition:width .4s}
+.qcard{padding:16px 14px}
+.qvis{font-size:36px;line-height:1.3;text-align:center;word-break:break-word;margin-bottom:4px}
+.qtext{font-size:1.5rem;font-weight:800;line-height:1.65;text-align:center;margin-bottom:10px}
+.math{direction:ltr;unicode-bidi:isolate;display:inline-block;font-weight:800;letter-spacing:.03em}
+.options{display:grid;gap:12px;margin-top:14px}
+.opt{display:flex;align-items:center;gap:12px;min-height:66px;width:100%;border:4px solid var(--ink);background:#fff;color:var(--ink);border-radius:16px;padding:8px 12px;font-size:1.25rem;font-weight:800;text-align:start;cursor:pointer;box-shadow:0 5px 0 var(--ink);line-height:1.4}
+.opt:active:not(:disabled){transform:translateY(4px);box-shadow:0 1px 0 var(--ink)}
+.opt .letter{width:40px;height:40px;flex:none;border:3px solid var(--ink);border-radius:12px;display:grid;place-items:center;background:var(--main);color:var(--main-ink);font-weight:800}
+.opt.correct{background:#c9f7d8;border-color:var(--ink);animation:pop .3s}
+.opt.correct .letter{background:var(--ok);color:#fff}
+.opt.wrong{background:#ffd3d3;opacity:.8;animation:shake .4s}
+.opt.wrong .letter{background:var(--bad);color:#fff}
+.opt:disabled{cursor:default}
+.feedback{margin-top:14px;border:4px solid var(--ink);border-radius:16px;padding:12px 14px;font-weight:800;font-size:1.15rem;animation:pop .3s}
+.feedback.good{background:#c9f7d8}.feedback.bad{background:#ffd3d3}
+.feedback .hint{display:block;font-weight:600;font-size:1rem;margin-top:6px}
+#nextWrap{margin-top:14px}
+.storycard .tag{display:inline-block;background:var(--pop);border:3px solid var(--ink);padding:0 12px;border-radius:10px;font-weight:800;margin-bottom:8px;transform:rotate(-1.5deg)}
+.story{font-size:1.25rem;font-weight:600;line-height:1.85;margin:6px 0 14px}
+
+/* ============ النتيجة ============ */
+.result h2{font-size:2rem;margin:4px 0}
+.trophy{font-size:64px;animation:float 2s ease-in-out infinite}
+.bigstars{font-size:2.6rem;margin:6px 0}
+.bigstars .off{filter:grayscale(1);opacity:.3}
+.stat{display:inline-block;background:var(--pop);border:3px solid var(--ink);border-radius:12px;padding:2px 14px;font-weight:800;margin:4px}
+.levelup{background:var(--ok);color:#fff;border:3px solid var(--ink);border-radius:12px;padding:6px 10px;font-weight:800;margin:10px 0;animation:pop .5s}
+
+/* ============ نافذة الملف الشخصي ============ */
+.modal-back{position:fixed;inset:0;background:rgba(10,8,40,.72);display:grid;place-items:center;z-index:90;padding:16px}
+.modal{background:#fff;color:var(--ink);border:4px solid var(--ink);border-radius:22px;padding:18px;width:100%;max-width:460px;max-height:92vh;max-height:92dvh;overflow:auto;box-shadow:var(--sh)}
+.modal h2{margin-bottom:6px}
+
+/* ============ الحركة ============ */
+.confetti{position:absolute;top:-20px;width:11px;height:15px;border:2px solid var(--ink);animation:fall linear forwards}
+@keyframes slideIn{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+@keyframes jump{0%,100%{transform:translateY(0)}30%{transform:translateY(-26px) rotate(-8deg) scale(1.1)}60%{transform:translateY(0) rotate(8deg)}}
+@keyframes shake{0%,100%{transform:translateX(0)}20%{transform:translateX(-10px)}40%{transform:translateX(10px)}60%{transform:translateX(-8px)}80%{transform:translateX(8px)}}
+@keyframes pop{0%{transform:scale(.6);opacity:0}70%{transform:scale(1.08)}100%{transform:scale(1);opacity:1}}
+@keyframes burst{0%{transform:scale(.2) rotate(-12deg);opacity:0}25%{transform:scale(1.15) rotate(4deg);opacity:1}80%{transform:scale(1) rotate(0);opacity:1}100%{transform:scale(1.1);opacity:0}}
+@keyframes floatUp{0%{transform:translateY(0);opacity:1}100%{transform:translateY(-70px);opacity:0}}
+@keyframes fall{0%{transform:translateY(0) rotate(0);opacity:1}100%{transform:translateY(112vh) rotate(720deg);opacity:.9}}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-7px)}}
+@media (prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}}
+@media (max-width:380px){.hero-banner h1{font-size:2.4rem}.qtext{font-size:1.3rem}.opt{font-size:1.1rem}.subject b{font-size:1.05rem}}
+</style>
+</head>
+<body data-hero="spiderman">
+<div id="bg" aria-hidden="true"></div>
+<div id="fx" aria-hidden="true"></div>
+<div id="app">
+  <header id="topbar" class="topbar" hidden></header>
+  <main id="screen" class="screen" aria-live="polite"></main>
+</div>
+<div id="modal-root"></div>
+<noscript><p style="padding:20px;color:#fff;font-size:1.3rem">لتشغيل مدرسة الأبطال فعّل JavaScript من فضلك. / Please enable JavaScript.</p></noscript>
+<script>
+/*
+  ============================================================
+  مدرسة الأبطال (Heroes Academy) - ملف واحد جاهز لـ GitHub Pages
+  ============================================================
+  كيف تضيف درساً جديداً؟ (في أي مكان بعد هذا الملف أو في نهاية السكربت):
+
+    HA.add('math',                       // رمز المادة: arabic | math | religion | discover | mathEn | english
+           'الوحدة الرابعة',              // اسم الوحدة (يُجمّع الدروس تحتها)
+           'math-10',                    // رمز فريد للدرس
+           'عنوان الدرس', '📐',           // العنوان + أيقونة
+           [
+             // [نص السؤال, [الإجابة الصحيحة أولاً, خطأ1, خطأ2, ...], تلميح اختياري, صورة/إيموجي اختياري]
+             ['ما ناتج {{12 + 7 = ?}}', ['19','18','20'], 'عُدّ من 12 سبع مرات', '🍎'],
+           ]);
+
+  - الإجابة الصحيحة تُكتب دائماً أولاً؛ الكود يخلط ترتيب الخيارات تلقائياً.
+  - من 2 إلى 4 خيارات لكل سؤال (اثنان فقط لأسئلة صح/خطأ).
+  - اكتب الأرقام دائماً غربية 1 2 3 وسيحوّلها الكود تلقائياً إلى ١ ٢ ٣ في المواد العربية.
+  - ضع العمليات الحسابية بين {{ }} لتظهر بترتيب صحيح: {{12 + 7 = ?}}
+  - لغة المادة (عربي RTL أو إنجليزي LTR) تُحدَّد في قائمة SUBJECTS بالحقل lang.
+*/
+(function () {
+'use strict';
+
+/* ===================== 1) أدوات مساعدة ===================== */
+const KEY = 'heroesAcademy.v2';
+const XP_FIRST = 10, XP_RETRY = 5, XP_LEVEL = 100;
+const $ = (s, r) => (r || document).querySelector(s);
+const $$ = (s, r) => Array.from((r || document).querySelectorAll(s));
+const esc = s => String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+const rand = a => a[Math.floor(Math.random() * a.length)];
+const shuffle = a => { const b = a.slice(); for (let i = b.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [b[i], b[j]] = [b[j], b[i]]; } return b; };
+const AR_DIGITS = ['٠', '١', '٢', '٣', '٤', '٥', '٦', '٧', '٨', '٩'];
+const toAr = s => String(s).replace(/[0-9]/g, d => AR_DIGITS[+d]);
+const tpl = (s, v) => String(s).replace(/\{(\w+)\}/g, (m, k) => (k in v ? v[k] : m));
+const num = (n, lang) => ((lang || curLang) === 'ar' ? toAr(n) : String(n));
+const cleanName = s => String(s || '').replace(/\s+/g, ' ').trim().slice(0, 20);
+
+/* تحويل نص السؤال إلى HTML: أرقام حسب اللغة + {{عمليات}} */
+function fmt(text, lang) {
+  let s = String(text);
+  if (lang === 'ar') s = toAr(s).replace(/\?/g, '؟');
+  s = esc(s);
+  return s.replace(/\{\{(.+?)\}\}/g, '<span class="math">$1</span>');
+}
+
+/* ===================== 2) الأبطال والأشرار والقصص ===================== */
+const HEROES = {
+  spiderman: {
+    emoji: '🕷️', colors: ['#e62429', '#1f4fd8'], trap: '🕸️',
+    name: { ar: 'سبايدرمان', en: 'Spider-Man' },
+    villain: { emoji: '🐙', name: { ar: 'الدكتور أخطبوط', en: 'Doctor Octopus' } },
+    stories: {
+      ar: [
+        'الشرير {villain} يهاجم المدينة بأذرعه الميكانيكية العملاقة! {hero} يحتاج مساعدتك يا {name}. أجب عن الأسئلة لتنقذ المدينة!',
+        'يا للهول! {villain} سرق كل خيوط الشبكة! ساعد {hero} في حل الألغاز لاستعادتها يا {name}.',
+        'انطفأت أنوار المدينة بسبب {villain}! أنت الآن شريك {hero} السري يا {name}. هيا نُعيد النور للمدينة!'
+      ],
+      en: [
+        '{villain} is attacking the city with his giant robot arms! {hero} needs your help, {name}. Answer the questions to save the city!',
+        'Oh no! {villain} stole all the spider webs! Help {hero} solve the puzzles to get them back, {name}.',
+        'The city lights went out because of {villain}! You are {hero}\'s secret partner, {name}. Let\'s bring the light back!'
+      ]
+    }
+  },
+  batman: {
+    emoji: '🦇', colors: ['#16123a', '#ffc400'], trap: '⛓️',
+    name: { ar: 'باتمان', en: 'Batman' },
+    villain: { emoji: '🃏', name: { ar: 'الجوكر', en: 'The Joker' } },
+    stories: {
+      ar: [
+        '{villain} يخطط لخدعة كبيرة في مدينة جوثام! {hero} يحتاج ذكاءك يا {name}. أجب عن الأسئلة لتكشف خطته!',
+        '{villain} أخفى بالونات المفاجآت في كل مكان! ساعد {hero} لإيقاف اللعبة الشريرة يا {name}.',
+        'يغطي الظلام مدينة جوثام لأن {villain} أطفأ الأنوار! أنت مساعد {hero} الجديد يا {name}!'
+      ],
+      en: [
+        '{villain} is planning a big trick in Gotham City! {hero} needs your smart brain, {name}. Answer to uncover his plan!',
+        '{villain} hid surprise balloons all over the city! Help {hero} stop the naughty game, {name}.',
+        'Darkness covers Gotham because {villain} switched off the lights! You are {hero}\'s new helper, {name}!'
+      ]
+    }
+  },
+  superman: {
+    emoji: '🦸', colors: ['#1f5bff', '#e62429'], trap: '⛓️',
+    name: { ar: 'سوبرمان', en: 'Superman' },
+    villain: { emoji: '🦹', name: { ar: 'ليكس لوثر', en: 'Lex Luthor' } },
+    stories: {
+      ar: [
+        '{villain} شغّل آلة غريبة تخيف سكان مدينة متروبوليس! {hero} يحتاج مساعدتك يا {name}!',
+        '{villain} حبس {hero} في قفص متوهج! لن يتحرر إلا بإجاباتك الصحيحة يا {name}.',
+        'المدينة تحتاج إلى بطل! {hero} ينتظر إجاباتك يا {name} ليطير ويهزم {villain}!'
+      ],
+      en: [
+        '{villain} started a strange machine that scares Metropolis! {hero} needs your help, {name}!',
+        '{villain} trapped {hero} in a glowing cage! Only your right answers can set him free, {name}.',
+        'The city needs a hero! {hero} is waiting for your answers, {name}, so he can fly and beat {villain}!'
+      ]
+    }
+  }
+};
+
+const PHRASES = {
+  ar: {
+    welcome: ['أهلاً يا {name}! مرحباً بك في مدرسة الأبطال!'],
+    cheer: ['شاطر يا {name}! ضربة قاضية للأعداء!', 'برافو يا {name}! {hero} انتصر!', 'أحسنت يا {name}! {villain} تراجع للخلف!', 'ممتاز يا {name}! أنت بطل حقيقي!'],
+    retry: ['حاول مرة ثانية لننقذ {hero}!', '{villain} حاصر {hero}! فكّر مرة ثانية يا {name}.', 'لا بأس يا {name}! جرّب إجابة أخرى وأنقذ {hero}!'],
+    finish: ['بطل حقيقي يا {name}! لقد هزمنا {villain}!', 'مهمة ناجحة يا {name}! {hero} يشكرك من قلبه!'],
+    levelUp: ['مبروك يا {name}! وصلت إلى المستوى {level}!']
+  },
+  en: {
+    welcome: ['Welcome to Heroes Academy, {name}!'],
+    cheer: ['Great job {name}! {hero} wins!', 'Awesome {name}! Knockout punch for the bad guys!', 'Super, {name}! {villain} is getting weaker!', 'Well done {name}! You are a real hero!'],
+    retry: ['Try again {name}!', 'Oh no! {villain} trapped {hero}! Try again {name}!', 'Do not give up {name}! Save {hero}!'],
+    finish: ['You are a true hero, {name}! We beat {villain}!', 'Mission complete, {name}! {hero} says thank you!'],
+    levelUp: ['Congratulations {name}! You reached level {level}!']
+  }
+};
+
+/* ===================== 3) المواد ===================== */
+const SUBJECTS = [
+  { id: 'arabic',   lang: 'ar', icon: '📖', color: '#d9480f', label: 'اللغة العربية',   sub: 'قراءة وقواعد وإملاء',  title: 'اللغة العربية' },
+  { id: 'math',     lang: 'ar', icon: '🔢', color: '#1c64f2', label: 'الرياضيات',       sub: 'كتاب الوزارة',          title: 'الرياضيات' },
+  { id: 'religion', lang: 'ar', icon: '🕌', color: '#0b8f5a', label: 'التربية الدينية', sub: 'عقيدة وقرآن وسيرة',     title: 'التربية الدينية الإسلامية' },
+  { id: 'discover', lang: 'en', icon: '🔬', color: '#0e8f9c', label: 'Discover',        sub: 'العلوم (بالإنجليزية)',   title: 'Discover · Science' },
+  { id: 'mathEn',   lang: 'en', icon: '➗', color: '#7c3aed', label: 'Math',            sub: 'الرياضيات (بالإنجليزية)', title: 'Math' },
+  { id: 'english',  lang: 'en', icon: '🔤', color: '#d6336c', label: 'English',         sub: 'Connect',                title: 'English · Connect' }
+];
+const CURRICULUM = {};
+SUBJECTS.forEach(s => { CURRICULUM[s.id] = []; });
+
+const DEFAULT_N = 6;
+const toQ = a => (Array.isArray(a) ? { q: a[0], options: a[1], answer: 0, hint: a[2] || '', visual: a[3] || '' } : a);
+/* qs: مصفوفة أسئلة ثابتة، أو دالة مولِّدة ترجع مصفوفة أسئلة جديدة في كل مرة (أرقام عشوائية).
+   extra: { note: 'ملخص القاعدة يظهر قبل المهمة', n: عدد الأسئلة في كل محاولة } */
+function add(sid, unit, id, title, icon, qs, extra) {
+  if (!CURRICULUM[sid]) throw new Error('Unknown subject: ' + sid);
+  const l = { id, unit, title, icon, note: (extra && extra.note) || '', n: (extra && extra.n) || DEFAULT_N };
+  if (typeof qs === 'function') l.gen = qs; else l.questions = qs.map(toQ);
+  CURRICULUM[sid].push(l);
+}
+
+/* ===================== 4) نصوص الواجهة ===================== */
+const UI = {
+  ar: {
+    dir: 'rtl', speechPrefs: ['ar-EG', 'ar-SA', 'ar-AE', 'ar'], fallbackSpeech: 'ar-SA',
+    brand: 'مدرسة الأبطال', tagline: 'منصة تعليمية مجانية للأطفال · الصف الثاني الابتدائي',
+    welcomeTitle: 'أهلاً بالأبطال!', welcomeText: 'العالم يحتاج بطلاً ذكياً مثلك! اكتب اسمك واختر بطلك الخارق لتبدأ المغامرة.',
+    nameLabel: 'ما اسمك أيها البطل؟', namePlaceholder: 'اكتب اسمك هنا', chooseHero: 'اختر بطلك الخارق', startAdventure: 'ابدأ المغامرة 🚀',
+    errName: 'اكتب اسمك أولاً يا بطل!', errHero: 'اختر بطلك الخارق أولاً!',
+    hello: 'أهلاً يا {name}!', dashSub: 'اختر المادة وابدأ مهمتك', chooseSubject: 'اختر مادتك', lastSubject: 'آخر مادة',
+    doneOf: 'أنجزت {done} من {total}', comingSoon: 'قريباً',
+    level: 'المستوى', xp: 'نقطة', back: 'رجوع', questionsCount: '{n} أسئلة', noLessons: 'الدروس قادمة قريباً! 📚', lessonLocked: 'قريباً',
+    startMission: 'ابدأ المهمة ⚔️', listen: 'استمع', questionOf: 'السؤال {n} من {total}', next: 'التالي ⏭️', finish: 'إنهاء المهمة 🏁',
+    missionLabel: 'المهمة', victory: 'انتصار البطل!', xpEarned: 'نقاط المهمة', bonusStars: 'مكافأة النجوم',
+    toLessons: 'قائمة الدروس', toHome: 'الرئيسية', nextLesson: 'الدرس التالي', replay: 'إعادة المهمة 🔁',
+    profile: 'ملفي الشخصي', save: 'حفظ', cancel: 'إلغاء', reset: 'مسح كل التقدم', resetConfirm: 'هل تريد مسح كل النقاط والتقدم؟',
+    hintLabel: 'تلميح: ', noteLabel: '💡 تذكّر:', pow: 'ضربة!', oops: 'أوه لا!', soundOn: 'الصوت يعمل', soundOff: 'الصوت متوقف', home: 'الرئيسية'
+  },
+  en: {
+    dir: 'ltr', speechPrefs: ['en-US', 'en-GB', 'en'], fallbackSpeech: 'en-US',
+    brand: 'Heroes Academy', tagline: 'A free learning platform for kids · Grade 2',
+    welcomeTitle: 'Welcome, heroes!', welcomeText: 'The world needs a smart hero like you! Type your name and pick your superhero.',
+    nameLabel: 'What is your name, hero?', namePlaceholder: 'Type your name here', chooseHero: 'Choose your superhero', startAdventure: 'Start the adventure 🚀',
+    errName: 'Type your name first, hero!', errHero: 'Pick your superhero first!',
+    hello: 'Hi {name}!', dashSub: 'Pick a subject and start your mission', chooseSubject: 'Choose a subject', lastSubject: 'Last subject',
+    doneOf: 'Done {done} of {total}', comingSoon: 'Coming soon',
+    level: 'Level', xp: 'XP', back: 'Back', questionsCount: '{n} questions', noLessons: 'Lessons are coming soon! 📚', lessonLocked: 'Soon',
+    startMission: 'Start the mission ⚔️', listen: 'Listen', questionOf: 'Question {n} of {total}', next: 'Next ⏭️', finish: 'Finish the mission 🏁',
+    missionLabel: 'Mission', victory: 'The hero wins!', xpEarned: 'Mission XP', bonusStars: 'Star bonus',
+    toLessons: 'Lessons', toHome: 'Home', nextLesson: 'Next lesson', replay: 'Play again 🔁',
+    profile: 'My Profile', save: 'Save', cancel: 'Cancel', reset: 'Reset all progress', resetConfirm: 'Delete all XP and progress?',
+    hintLabel: 'Hint: ', noteLabel: '💡 Remember:', pow: 'POW!', oops: 'OH NO!', soundOn: 'Sound on', soundOff: 'Sound off', home: 'Home'
+  }
+};
+const MATH_WORDS = {
+  ar: { plus: 'زائد', minus: 'ناقص', times: 'ضرب', div: 'قسمة على', eq: 'يساوي', gt: 'أكبر من', lt: 'أصغر من', blank: 'فراغ' },
+  en: { plus: 'plus', minus: 'minus', times: 'times', div: 'divided by', eq: 'equals', gt: 'is greater than', lt: 'is less than', blank: 'blank' }
+};
+const LETTERS = { ar: ['أ', 'ب', 'ج', 'د'], en: ['A', 'B', 'C', 'D'] };
+
+let curLang = 'ar';
+const t = (k, v) => { const d = UI[curLang]; const s = (k in d) ? d[k] : (UI.ar[k] !== undefined ? UI.ar[k] : k); return v ? tpl(s, v) : s; };
+
+/* ===================== 5) الحالة والتخزين ===================== */
+const defaultState = () => ({ v: 2, name: '', hero: '', xp: 0, subject: null, sound: true, progress: {} });
+function load() {
+  try {
+    const raw = localStorage.getItem(KEY);
+    if (!raw) return defaultState();
+    const s = JSON.parse(raw);
+    return Object.assign(defaultState(), s, { progress: (s && s.progress) || {} });
+  } catch (e) { return defaultState(); }
+}
+let state = load();
+function save() { try { localStorage.setItem(KEY, JSON.stringify(state)); } catch (e) { /* التخزين غير متاح */ } }
+const levelInfo = xp => ({ level: Math.floor(xp / XP_LEVEL) + 1, into: xp % XP_LEVEL, pct: (xp % XP_LEVEL) / XP_LEVEL * 100 });
+const getSubject = id => SUBJECTS.find(s => s.id === id) || SUBJECTS[0];
+const lessonsOf = id => CURRICULUM[id] || [];
+const playable = l => !!(l.gen || (l.questions && l.questions.length > 0));
+const qCount = l => (l.gen ? l.n : Math.min(l.n, l.questions.length));
+function resolveQs(l) { const pool = l.gen ? l.gen().map(toQ) : l.questions.slice(); return shuffle(pool).slice(0, l.n); }
+const prog = (sid, lid) => (state.progress[sid] && state.progress[sid][lid]) || null;
+const hero = () => HEROES[state.hero] || HEROES.spiderman;
+function vars(lang, extra) { const h = hero(); return Object.assign({ name: state.name, hero: h.name[lang], villain: h.villain.name[lang] }, extra || {}); }
+const say = (kind, lang, extra) => tpl(rand(PHRASES[lang][kind]), vars(lang, extra));
+
+/* ===================== 6) الصوت (نطق + مؤثرات) ===================== */
+function speakable(text, lang) {
+  const w = MATH_WORDS[lang];
+  return String(text).replace(/\{\{|\}\}/g, '')
+    .replace(/\s*\+\s*/g, ' ' + w.plus + ' ').replace(/\s[-−–]\s/g, ' ' + w.minus + ' ')
+    .replace(/\s*×\s*/g, ' ' + w.times + ' ').replace(/\s*÷\s*/g, ' ' + w.div + ' ')
+    .replace(/\s*=\s*/g, ' ' + w.eq + ' ').replace(/\s>\s/g, ' ' + w.gt + ' ').replace(/\s<\s/g, ' ' + w.lt + ' ')
+    .replace(/_{2,}|\.{3,}|…+/g, ' ' + w.blank + ' ');
+}
+const Speech = {
+  ok: 'speechSynthesis' in window && 'SpeechSynthesisUtterance' in window,
+  voices: [],
+  init() {
+    if (!this.ok) return;
+    const load = () => { try { this.voices = speechSynthesis.getVoices() || []; } catch (e) { /* تجاهل */ } };
+    load();
+    if ('onvoiceschanged' in speechSynthesis) speechSynthesis.onvoiceschanged = load;
+  },
+  pick(lang) {
+    const norm = v => (v.lang || '').replace('_', '-').toLowerCase();
+    for (const p of UI[lang].speechPrefs) { const v = this.voices.find(x => norm(x) === p.toLowerCase()); if (v) return v; }
+    return this.voices.find(x => norm(x).startsWith(lang)) || null;
+  },
+  speak(text, lang, force) {
+    if (!this.ok || !text || (!state.sound && !force)) return;
+    try {
+      speechSynthesis.cancel();
+      const u = new SpeechSynthesisUtterance(speakable(text, lang));
+      const v = this.pick(lang);
+      if (v) { u.voice = v; u.lang = v.lang; } else { u.lang = UI[lang].fallbackSpeech; }
+      u.rate = lang === 'ar' ? 0.88 : 0.9; u.pitch = 1.15; u.volume = 1;
+      setTimeout(() => { try { speechSynthesis.speak(u); } catch (e) { /* تجاهل */ } }, 60);
+    } catch (e) { /* تجاهل */ }
+  },
+  stop() { if (this.ok) { try { speechSynthesis.cancel(); } catch (e) { /* تجاهل */ } } }
+};
+const SFX = {
+  ctx: null,
+  play(kind) {
+    if (!state.sound) return;
+    try {
+      const C = window.AudioContext || window.webkitAudioContext; if (!C) return;
+      this.ctx = this.ctx || new C(); const ctx = this.ctx;
+      const notes = kind === 'ok' ? [523, 659, 784] : kind === 'bad' ? [220, 165] : kind === 'win' ? [523, 659, 784, 1047] : [440];
+      let at = ctx.currentTime;
+      notes.forEach(f => {
+        const o = ctx.createOscillator(), g = ctx.createGain();
+        o.type = kind === 'bad' ? 'sawtooth' : 'triangle'; o.frequency.value = f;
+        g.gain.setValueAtTime(0.0001, at); g.gain.exponentialRampToValueAtTime(0.14, at + 0.02); g.gain.exponentialRampToValueAtTime(0.0001, at + 0.16);
+        o.connect(g); g.connect(ctx.destination); o.start(at); o.stop(at + 0.18); at += 0.13;
+      });
+    } catch (e) { /* تجاهل */ }
+  }
+};
+function confetti(n) {
+  if (window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  const fx = $('#fx'), colors = ['#ffd400', '#ff3b3b', '#2f6bff', '#22c55e', '#ff7ad9', '#ffffff'];
+  for (let i = 0; i < n; i++) {
+    const c = document.createElement('span'); c.className = 'confetti';
+    c.style.left = Math.random() * 100 + 'vw'; c.style.background = rand(colors);
+    c.style.animationDuration = (1.6 + Math.random() * 1.6) + 's'; c.style.animationDelay = (Math.random() * 0.4) + 's';
+    c.style.borderRadius = Math.random() > 0.5 ? '50%' : '2px';
+    c.addEventListener('animationend', () => c.remove()); fx.appendChild(c);
+  }
+}
+function replayAnim(el, cls) { if (!el) return; el.classList.remove(cls); void el.offsetWidth; el.classList.add(cls); }
+
+/* ===================== 7) التنقل والعرض ===================== */
+let view = { name: 'onboarding' };
+let session = null;
+let draft = { hero: '' };
+
+function applyLang(lang) {
+  curLang = lang;
+  document.documentElement.lang = lang; document.documentElement.dir = UI[lang].dir;
+  document.body.classList.toggle('lang-en', lang === 'en');
+}
+function go(name, extra) {
+  Speech.stop(); closeModal();
+  view = Object.assign({}, view, { name }, extra || {});
+  render(); window.scrollTo(0, 0);
+}
+function render() {
+  const inSubject = ['lessons', 'story', 'quiz', 'result'].includes(view.name);
+  if (inSubject && (!view.subjectId || (view.name !== 'lessons' && !session))) view = { name: 'dashboard' };
+  applyLang(inSubject ? getSubject(view.subjectId).lang : 'ar');
+  document.body.dataset.hero = (view.name === 'onboarding' ? (draft.hero || state.hero) : state.hero) || 'spiderman';
+  renderTopbar();
+  const root = $('#screen');
+  root.className = 'screen';
+  root.innerHTML = VIEWS[view.name]();
+  void root.offsetWidth; root.classList.add('enter');
+}
+function renderTopbar() {
+  const bar = $('#topbar'); if (!bar) return;
+  if (view.name === 'onboarding' || !state.hero) { bar.hidden = true; bar.innerHTML = ''; return; }
+  bar.hidden = false;
+  const h = hero(), li = levelInfo(state.xp);
+  bar.innerHTML =
+    '<button class="avatar" data-action="profile" style="--c1:' + h.colors[0] + ';--c2:' + h.colors[1] + '" aria-label="' + esc(t('profile')) + '">' + h.emoji + '</button>' +
+    '<div class="who"><b>' + esc(state.name) + '</b><small>' + t('level') + ' ' + num(li.level) + ' · ' + num(state.xp) + ' ' + t('xp') + '</small>' +
+    '<div class="xpbar"><i style="width:' + li.pct + '%"></i></div></div>' +
+    '<button class="iconbtn" data-action="toggle-sound" aria-label="' + esc(state.sound ? t('soundOn') : t('soundOff')) + '">' + (state.sound ? '🔊' : '🔇') + '</button>' +
+    '<button class="iconbtn" data-action="home" aria-label="' + esc(t('home')) + '">🏠</button>';
+}
+const starsHTML = n => [1, 2, 3].map(i => '<span class="' + (i <= n ? 'on' : 'off') + '">⭐</span>').join('');
+const backArrow = () => (curLang === 'ar' ? '➡️' : '⬅️');
+function headRow(title, action) {
+  return '<div class="headrow"><button class="iconbtn" data-action="' + action + '" aria-label="' + esc(t('back')) + '">' + backArrow() + '</button><h2 class="title-pop">' + title + '</h2></div>';
+}
+function heroPicker(selected) {
+  return '<div class="hero-pick" role="radiogroup">' + Object.keys(HEROES).map(id => {
+    const h = HEROES[id], on = selected === id;
+    return '<button type="button" class="hero-card' + (on ? ' selected' : '') + '" role="radio" aria-checked="' + on + '" data-action="pick-hero" data-hero="' + id +
+      '" style="--c1:' + h.colors[0] + ';--c2:' + h.colors[1] + '"><span class="hbadge">' + h.emoji + '</span><span>' + esc(h.name[curLang]) + '</span></button>';
+  }).join('') + '</div>';
+}
+function stageHTML(o) {
+  o = o || {};
+  const h = hero(), v = h.villain, lang = curLang;
+  return '<div class="stage ' + (o.cls || '') + '" id="stage">' +
+    '<div class="fighter" id="heroBox"><div class="fig hero" id="heroFig" style="--c1:' + h.colors[0] + ';--c2:' + h.colors[1] + '">' + h.emoji + '<span class="cage" aria-hidden="true">' + h.trap + '</span></div><div class="nm">' + esc(h.name[lang]) + '</div></div>' +
+    '<div class="vs">VS</div>' +
+    '<div class="fighter" id="villainBox"><div class="fig villain' + (o.defeated ? ' defeated' : '') + '" id="villainFig">' + (o.defeated ? '😵' : v.emoji) + '</div><div class="nm">' + esc(v.name[lang]) + '</div>' +
+    (o.hp != null ? '<div class="hp"><i id="villainHp" style="width:' + o.hp + '%"></i></div>' : '') + '</div>' +
+    '<div class="burst-wrap" id="burstWrap"></div></div>';
+}
+
+const VIEWS = {
+  onboarding() {
+    return '<section class="hero-banner"><div class="badges"><span>🕷️</span><span>🦇</span><span>🦸</span></div>' +
+      '<h1 class="title-pop">' + t('brand') + '</h1><p class="tag">' + t('tagline') + '</p></section>' +
+      '<div class="panel"><h2 class="center">' + t('welcomeTitle') + '</h2><p class="lead center">' + t('welcomeText') + '</p>' +
+      '<label class="lbl" for="nameInput">' + t('nameLabel') + '</label>' +
+      '<input id="nameInput" class="input" type="text" maxlength="20" autocomplete="off" placeholder="' + esc(t('namePlaceholder')) + '" value="' + esc(state.name) + '">' +
+      '<label class="lbl">' + t('chooseHero') + '</label>' + heroPicker(draft.hero) +
+      '<p id="err" class="err" role="alert"></p><button class="btn" data-action="start">' + t('startAdventure') + '</button></div>';
+  },
+  dashboard() {
+    const h = hero();
+    const cards = SUBJECTS.map(s => {
+      const ls = lessonsOf(s.id).filter(playable), done = ls.filter(l => prog(s.id, l.id) && prog(s.id, l.id).done).length;
+      const pct = ls.length ? done / ls.length * 100 : 0;
+      return '<button class="subject' + (state.subject === s.id ? ' last' : '') + '" style="--sc:' + s.color + '" data-action="open-subject" data-id="' + s.id + '" data-badge="' + esc(t('lastSubject')) + '">' +
+        '<span class="ic">' + s.icon + '</span><b>' + esc(s.label) + '</b><small>' + esc(s.sub) + '</small>' +
+        '<small>' + (ls.length ? t('doneOf', { done: num(done), total: num(ls.length) }) : t('comingSoon')) + '</small>' +
+        '<span class="mini"><i style="width:' + pct + '%"></i></span></button>';
+    }).join('');
+    return '<div class="glass greet"><div class="gpic" style="--c1:' + h.colors[0] + ';--c2:' + h.colors[1] + '">' + h.emoji + '</div><div><h2 class="title-pop">' + t('hello', { name: esc(state.name) }) + '</h2><p>' + t('dashSub') + '</p></div></div>' +
+      '<h3 class="section">' + t('chooseSubject') + '</h3><div class="subjects">' + cards + '</div>';
+  },
+  lessons() {
+    const s = getSubject(view.subjectId), ls = lessonsOf(s.id), lang = s.lang;
+    let html = headRow(s.icon + ' ' + esc(s.title), 'back');
+    if (!ls.length) return html + '<div class="panel center">' + t('noLessons') + '</div>';
+    let lastUnit = null;
+    ls.forEach(l => {
+      if (l.unit && l.unit !== lastUnit) { html += '<div class="unit title-pop">' + fmt(l.unit, lang) + '</div>'; lastUnit = l.unit; }
+      const p = prog(s.id, l.id), ok = playable(l);
+      html += '<button class="lesson" style="--sc:' + s.color + '" ' + (ok ? 'data-action="open-lesson" data-id="' + l.id + '"' : 'disabled') + '>' +
+        '<span class="lic">' + (l.icon || s.icon) + '</span><span class="lt"><b>' + fmt(l.title, lang) + '</b><small>' + (ok ? t('questionsCount', { n: num(qCount(l)) }) : t('lessonLocked')) + '</small></span>' +
+        '<span class="stars">' + starsHTML(p ? p.stars : 0) + '</span></button>';
+    });
+    return html;
+  },
+  story() {
+    const s = session;
+    return headRow(s.icon + ' ' + fmt(s.lesson.title, s.lang), 'back-lessons') + stageHTML() +
+      '<div class="panel storycard"><span class="tag">' + t('missionLabel') + '</span><p class="story">' + fmt(s.storyText, s.lang) + '</p>' +
+      (s.lesson.note ? '<div class="note"><b>' + t('noteLabel') + '</b> ' + fmt(s.lesson.note, s.lang) + '</div>' : '') +
+      '<button class="btn alt small" data-action="listen-story">🔊 ' + t('listen') + '</button>' +
+      '<button class="btn" data-action="begin-quiz">' + t('startMission') + '</button></div>';
+  },
+  quiz() {
+    const s = session, lang = s.lang, q = s.qs[s.idx];
+    const pct = (s.idx / s.total) * 100, hp = (s.total - s.correctCount) / s.total * 100;
+    const opts = s.options.map((o, i) => '<button class="opt" data-action="answer" data-i="' + i + '"><span class="letter">' + LETTERS[lang][i] + '</span><span' + (lang === 'en' ? ' dir="auto"' : '') + '>' + fmt(o.text, lang) + '</span></button>').join('');
+    return '<div class="headrow"><button class="iconbtn" data-action="back-lessons" aria-label="' + esc(t('back')) + '">' + backArrow() + '</button>' +
+      '<div class="qprog" style="flex:1;margin:0"><span>' + t('questionOf', { n: num(s.idx + 1), total: num(s.total) }) + '</span><div class="bar"><i style="width:' + pct + '%"></i></div></div></div>' +
+      stageHTML({ hp: hp }) +
+      '<div class="panel qcard">' + (q.visual ? '<div class="qvis">' + esc(q.visual) + '</div>' : '') + (q.vert ? '<pre class="vert">' + esc(lang === 'ar' ? toAr(q.vert) : q.vert) + '</pre>' : '') +
+      '<div class="qtext">' + fmt(q.q, lang) + '</div>' +
+      '<button class="btn alt small" data-action="listen-question">🔊 ' + t('listen') + '</button>' +
+      '<div class="options" id="options">' + opts + '</div><div id="feedback" aria-live="assertive"></div><div id="nextWrap"></div></div>';
+  },
+  result() {
+    const s = session, lessons = lessonsOf(s.subjectId);
+    const nxt = lessons.slice(s.index + 1).find(playable);
+    return stageHTML({ defeated: true, cls: 'jump loop' }) +
+      '<div class="panel center result"><div class="trophy">🏆</div><h2>' + t('victory') + '</h2><p class="lead">' + fmt(s.finishText, s.lang) + '</p>' +
+      '<div class="bigstars">' + starsHTML(s.stars) + '</div>' +
+      '<div><span class="stat">+' + num(s.earned) + ' ' + t('xp') + '</span></div>' +
+      '<p style="font-weight:700">' + t('xpEarned') + ' (' + t('bonusStars') + ' +' + num(s.bonus) + ')</p>' +
+      (s.leveledUp ? '<div class="levelup">' + fmt(s.levelText, s.lang) + '</div>' : '') +
+      (nxt ? '<button class="btn green" data-action="next-lesson">' + t('nextLesson') + '</button>' : '') +
+      '<button class="btn" data-action="replay">' + t('replay') + '</button>' +
+      '<button class="btn alt" data-action="to-lessons">' + t('toLessons') + '</button>' +
+      '<button class="btn alt" data-action="home">' + t('toHome') + '</button></div>';
+  }
+};
+
+/* ===================== 8) الدرس والأسئلة ===================== */
+function openSubject(id) { state.subject = id; save(); go('lessons', { subjectId: id }); }
+function newSession(sid, lid) {
+  const subj = getSubject(sid), lessons = lessonsOf(sid), lesson = lessons.find(l => l.id === lid), index = lessons.indexOf(lesson);
+  const lang = subj.lang, stories = hero().stories[lang];
+  session = {
+    subjectId: sid, lessonId: lid, lesson: lesson, index: index, lang: lang, icon: lesson.icon || subj.icon,
+    qs: resolveQs(lesson), idx: 0, total: 0, correctCount: 0, mistakes: 0, qMistakes: 0, firstTry: 0, earned: 0,
+    options: [], answered: false, levelBefore: levelInfo(state.xp).level,
+    storyText: tpl(stories[index % stories.length], vars(lang)), stars: 0, bonus: 0, leveledUp: false, finishText: '', levelText: ''
+  };
+  session.total = session.qs.length;
+  prepareQuestion();
+}
+function prepareQuestion() {
+  const q = session.qs[session.idx];
+  const list = q.options.map((text, i) => ({ text: text, correct: i === q.answer, tried: false }));
+  session.options = q.fixed ? list : shuffle(list);
+  session.answered = false; session.qMistakes = 0;
+}
+function openLesson(lid) {
+  newSession(view.subjectId, lid);
+  go('story');
+  Speech.speak(session.storyText, session.lang);
+}
+function addXP(n) { state.xp += n; save(); renderTopbar(); }
+function showFeedback(kind, msg, hint) {
+  const fb = $('#feedback'); if (!fb) return;
+  fb.innerHTML = '<div class="feedback ' + kind + '">' + fmt(msg, session.lang) + (hint ? '<span class="hint">' + esc(t('hintLabel')) + fmt(hint, session.lang) + '</span>' : '') + '</div>';
+}
+function showBurst(kind) {
+  const w = $('#burstWrap'); if (!w) return;
+  w.innerHTML = '<div class="burst' + (kind === 'bad' ? ' bad' : '') + '">' + esc(kind === 'bad' ? t('oops') : t('pow')) + '</div>';
+  setTimeout(() => { if (w) w.innerHTML = ''; }, 950);
+}
+function floatXP(n) {
+  const st = $('#stage'); if (!st) return;
+  const f = document.createElement('span'); f.className = 'xp-float'; f.textContent = '+' + num(n) + ' ' + t('xp');
+  st.appendChild(f); setTimeout(() => f.remove(), 1300);
+}
+function onAnswer(i) {
+  const s = session; if (!s || s.answered) return;
+  const o = s.options[i]; if (!o || o.tried) return;
+  const btn = $('#options [data-i="' + i + '"]'), q = s.qs[s.idx], lang = s.lang;
+  if (o.correct) {
+    s.answered = true;
+    const first = s.qMistakes === 0, award = first ? XP_FIRST : XP_RETRY;
+    if (first) s.firstTry++;
+    addXP(award); s.earned += award; s.correctCount++;
+    btn.classList.add('correct'); $$('#options .opt').forEach(b => { b.disabled = true; });
+    $('#heroBox').classList.remove('trapped');
+    const hp = $('#villainHp'); if (hp) hp.style.width = ((s.total - s.correctCount) / s.total * 100) + '%';
+    replayAnim($('#heroBox'), 'jump'); replayAnim($('#villainBox'), 'hit');
+    showBurst('ok'); floatXP(award); confetti(first ? 34 : 16); SFX.play('ok');
+    const msg = say('cheer', lang); showFeedback('good', msg); Speech.speak(msg, lang);
+    const last = s.idx + 1 >= s.total;
+    $('#nextWrap').innerHTML = '<button class="btn green" id="nextBtn" data-action="next">' + (last ? t('finish') : t('next')) + '</button>';
+    const nb = $('#nextBtn'); if (nb) { nb.focus({ preventScroll: true }); nb.scrollIntoView({ behavior: 'smooth', block: 'nearest' }); }
+  } else {
+    o.tried = true; s.qMistakes++; s.mistakes++;
+    btn.classList.add('wrong'); btn.disabled = true;
+    replayAnim($('#heroBox'), 'trapped'); showBurst('bad'); SFX.play('bad');
+    const msg = say('retry', lang); showFeedback('bad', msg, q.hint); Speech.speak(msg, lang);
+  }
+}
+function nextQuestion() {
+  const s = session; if (!s) return;
+  if (s.idx + 1 < s.total) { s.idx++; prepareQuestion(); render(); window.scrollTo(0, 0); } else { finishLesson(); }
+}
+function finishLesson() {
+  const s = session;
+  const stars = s.mistakes === 0 ? 3 : (s.mistakes <= Math.ceil(s.total / 2) ? 2 : 1), bonus = stars * 5;
+  s.stars = stars; s.bonus = bonus; s.earned += bonus; state.xp += bonus;
+  const p = (state.progress[s.subjectId] = state.progress[s.subjectId] || {}), prev = p[s.lessonId];
+  p[s.lessonId] = { done: true, stars: Math.max(prev ? prev.stars : 0, stars), plays: (prev ? prev.plays : 0) + 1 };
+  save();
+  const lvl = levelInfo(state.xp).level; s.leveledUp = lvl > s.levelBefore;
+  s.finishText = say('finish', s.lang); s.levelText = s.leveledUp ? say('levelUp', s.lang, { level: lvl }) : '';
+  go('result'); confetti(90); SFX.play('win');
+  Speech.speak(s.finishText + (s.leveledUp ? ' ' + s.levelText : ''), s.lang);
+}
+
+/* ===================== 9) البداية والملف الشخصي ===================== */
+function startAdventure() {
+  const name = cleanName($('#nameInput').value), err = $('#err');
+  if (!name) { err.textContent = t('errName'); replayAnim($('#nameInput'), 'wrong'); return; }
+  if (!draft.hero) { err.textContent = t('errHero'); return; }
+  state.name = name; state.hero = draft.hero; save();
+  Speech.speak(say('welcome', 'ar'), 'ar'); SFX.play('win'); confetti(50);
+  go('dashboard');
+}
+const modalRoot = () => $('#modal-root');
+function openProfile() {
+  draft.hero = state.hero;
+  modalRoot().innerHTML = '<div class="modal-back" data-action="close-modal-bg"><div class="modal" role="dialog" aria-modal="true">' +
+    '<h2 class="center">' + t('profile') + '</h2>' +
+    '<label class="lbl" for="nameInput">' + t('nameLabel') + '</label><input id="nameInput" class="input" maxlength="20" autocomplete="off" value="' + esc(state.name) + '">' +
+    '<label class="lbl">' + t('chooseHero') + '</label>' + heroPicker(state.hero) +
+    '<p id="modalErr" class="err" role="alert"></p>' +
+    '<button class="btn" data-action="save-profile">' + t('save') + '</button>' +
+    '<button class="btn alt" data-action="close-modal">' + t('cancel') + '</button>' +
+    '<button class="btn danger small" data-action="reset">' + t('reset') + '</button></div></div>';
+}
+function closeModal() {
+  const r = modalRoot(); if (!r || !r.firstChild) return;
+  r.innerHTML = ''; if (state.hero) { document.body.dataset.hero = state.hero; draft.hero = state.hero; }
+}
+function saveProfile() {
+  const name = cleanName($('#nameInput').value), e = $('#modalErr');
+  if (!name) { e.textContent = t('errName'); return; }
+  if (!draft.hero) { e.textContent = t('errHero'); return; }
+  state.name = name; state.hero = draft.hero; save(); closeModal(); render();
+}
+function resetAll() {
+  if (!confirm(t('resetConfirm'))) return;
+  try { localStorage.removeItem(KEY); } catch (e) { /* تجاهل */ }
+  state = defaultState(); session = null; draft = { hero: '' }; closeModal(); view = { name: 'onboarding' }; render();
+}
+
+/* ===================== 10) الأحداث ===================== */
+const ACTIONS = {
+  'pick-hero'(el) {
+    const id = el.dataset.hero; draft.hero = id; document.body.dataset.hero = id;
+    $$('.hero-card', el.closest('.hero-pick')).forEach(c => { const on = c === el; c.classList.toggle('selected', on); c.setAttribute('aria-checked', on); });
+    Speech.speak(HEROES[id].name[curLang], curLang);
+  },
+  start: startAdventure,
+  'open-subject'(el) { openSubject(el.dataset.id); },
+  back() { go('dashboard'); },
+  home() { go('dashboard'); },
+  'back-lessons'() { go('lessons'); },
+  'to-lessons'() { go('lessons'); },
+  'open-lesson'(el) { openLesson(el.dataset.id); },
+  'listen-story'() { Speech.speak(session.storyText + (session.lesson.note ? '. ' + session.lesson.note : ''), session.lang, true); },
+  'begin-quiz'() { go('quiz'); },
+  answer(el) { onAnswer(+el.dataset.i); },
+  'listen-question'() {
+    const q = session.qs[session.idx];
+    Speech.speak([q.q].concat(session.options.map(o => o.text)).join('. '), session.lang, true);
+  },
+  next: nextQuestion,
+  'toggle-sound'() { state.sound = !state.sound; if (!state.sound) Speech.stop(); save(); renderTopbar(); },
+  profile: openProfile,
+  'save-profile': saveProfile,
+  'close-modal': closeModal,
+  'close-modal-bg'(el, ev) { if (ev.target === el) closeModal(); },
+  reset: resetAll,
+  replay() { openLesson(session.lessonId); },
+  'next-lesson'() {
+    const lessons = lessonsOf(session.subjectId), nxt = lessons.slice(session.index + 1).find(playable);
+    if (nxt) openLesson(nxt.id);
+  }
+};
+function bind() {
+  document.addEventListener('click', e => {
+    const el = e.target.closest('[data-action]'); if (!el || el.disabled) return;
+    const fn = ACTIONS[el.dataset.action]; if (fn) fn(el, e);
+  });
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Enter' && e.target && e.target.id === 'nameInput') { e.preventDefault(); if ($('.modal-back')) saveProfile(); else startAdventure(); }
+    if (e.key === 'Escape') closeModal();
+  });
+  window.addEventListener('pagehide', () => Speech.stop());
+}
+
+/* ===================== 11) التشغيل والواجهة البرمجية ===================== */
+function start() {
+  Speech.init(); bind(); draft.hero = state.hero;
+  view = { name: (state.name && state.hero && HEROES[state.hero]) ? 'dashboard' : 'onboarding' };
+  render();
+}
+window.HA = {
+  add: add,
+  util: { shuffle: shuffle, rand: rand, toAr: toAr },
+  addRaw(sid, lesson) { CURRICULUM[sid].push(lesson); },
+  start: start,
+  stats() { return SUBJECTS.map(s => ({ subject: s.id, lessons: lessonsOf(s.id).length, questions: lessonsOf(s.id).reduce((n, l) => n + (l.gen ? l.n : l.questions.length), 0) })); },
+  curriculum: CURRICULUM, subjects: SUBJECTS
+};
+})();
+
+/* ============================================================
+   أدوات بناء الأسئلة + مولّدات الرياضيات (أرقام عشوائية جديدة في كل محاولة)
+   ============================================================ */
+window.HAH = (function () {
+  'use strict';
+  const U = HA.util, shuffle = U.shuffle, rand = U.rand;
+  const ri = (a, b) => a + Math.floor(Math.random() * (b - a + 1));
+  const pickN = (a, n) => shuffle(a).slice(0, n);
+  const mk = (n, f) => Array.from({ length: n }, (_, i) => f(i));
+  const T = (lang, ar, en) => (lang === 'ar' ? ar : en);
+
+  /* سؤال ثابت: Q('النص', 'الإجابة الصحيحة', 'خطأ1', 'خطأ2')  ← الصحيحة أولاً دائماً */
+  const Q = (q, a, ...w) => [q, [a].concat(w), '', ''];
+  const H = (arr, h) => { arr[2] = h; return arr; };      // إضافة تلميح
+  const V = (arr, v) => { arr[3] = v; return arr; };      // إضافة صورة/إيموجي
+  const TA = (q, ok) => ({ q: q, options: ['صح ✅', 'خطأ ❌'], answer: ok ? 0 : 1, fixed: true, hint: '', visual: '' });
+  const TE = (q, ok) => ({ q: q, options: ['True ✅', 'False ❌'], answer: ok ? 0 : 1, fixed: true, hint: '', visual: '' });
+
+  /* سؤال إجابته رقم: الخيارات الخاطئة قريبة من الصحيحة (±1 ، ±10) */
+  function numQ(q, c, extra) {
+    const cand = [c + 10, c - 10, c + 1, c - 1, c + 2, c - 2].filter(x => x >= 0 && x !== c);
+    const w = pickN(cand, 3).map(String);
+    return Object.assign({ q: q, options: [String(c)].concat(w), answer: 0, hint: '', visual: '' }, extra || {});
+  }
+  const opts = (q, c, wrongs, extra) => Object.assign({ q: q, options: [String(c)].concat(wrongs.map(String)), answer: 0, hint: '', visual: '' }, extra || {});
+  const vert = (a, b, op) => {
+    const w = Math.max(String(a).length, String(b).length) + 1;
+    return String(a).padStart(w, ' ') + '\n' + op + String(b).padStart(w - 1, ' ') + '\n' + '─'.repeat(w);
+  };
+  const ONES = ['zero', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', 'ten', 'eleven', 'twelve', 'thirteen', 'fourteen', 'fifteen', 'sixteen', 'seventeen', 'eighteen', 'nineteen'];
+  const TENS = ['', '', 'twenty', 'thirty', 'forty', 'fifty', 'sixty', 'seventy', 'eighty', 'ninety'];
+  const numWords = n => {
+    if (n < 20) return ONES[n];
+    if (n < 100) return TENS[Math.floor(n / 10)] + (n % 10 ? ' ' + ONES[n % 10] : '');
+    const h = Math.floor(n / 100), r = n % 100;
+    return ONES[h] + ' hundred' + (r ? ' and ' + numWords(r) : '');
+  };
+  const distinctDigits = n => { const s = String(n); return new Set(s).size === s.length && !s.includes('0'); };
+  const rn3 = () => { let n; do { n = ri(123, 987); } while (!distinctDigits(n)); return n; };
+  const BOX = '▢';
+
+  /* ================= مولّدات الرياضيات (عربي/إنجليزي) ================= */
+  const ITEMS = [['🍎', 'تفاح', 'apples'], ['🍌', 'موز', 'bananas'], ['🍇', 'عنب', 'grapes'], ['🍓', 'فراولة', 'strawberries'], ['🍊', 'برتقال', 'oranges'], ['⚽', 'كرات', 'balls'], ['🚗', 'سيارات', 'cars'], ['🐟', 'أسماك', 'fish'], ['🌸', 'ورود', 'flowers'], ['⭐', 'نجوم', 'stars']];
+  const M = {
+    /* رسم بياني بالصور (Pictograph) */
+    graph: lang => () => mk(12, () => {
+      const items = pickN(ITEMS, 3), counts = pickN([1, 2, 3, 4, 5, 6], 3);
+      const nm = i => items[i][lang === 'ar' ? 1 : 2];
+      const visual = items.map((it, i) => nm(i) + ': ' + it[0].repeat(counts[i])).join('\n');
+      const order = counts.map((c, i) => i).sort((a, b) => counts[b] - counts[a]);
+      const kind = ri(0, 4);
+      if (kind === 0) { const i = ri(0, 2); return Object.assign(numQ(T(lang, 'كم عدد ' + nm(i) + ' في الرسم؟', 'How many ' + nm(i) + ' are in the graph?'), counts[i]), { visual: visual }); }
+      if (kind === 1) return Object.assign(opts(T(lang, 'أي صنف عدده هو الأكبر؟', 'Which one has the most?'), nm(order[0]), [nm(order[1]), nm(order[2])]), { visual: visual });
+      if (kind === 2) return Object.assign(opts(T(lang, 'أي صنف عدده هو الأقل؟', 'Which one has the least?'), nm(order[2]), [nm(order[0]), nm(order[1])]), { visual: visual });
+      if (kind === 3) return Object.assign(numQ(T(lang, 'كم يزيد عدد ' + nm(order[0]) + ' على عدد ' + nm(order[2]) + '؟', 'How many more ' + nm(order[0]) + ' than ' + nm(order[2]) + '?'), counts[order[0]] - counts[order[2]]), { visual: visual });
+      return Object.assign(numQ(T(lang, 'كم العدد الكلي للأصناف الثلاثة؟', 'How many are there in all?'), counts[0] + counts[1] + counts[2]), { visual: visual });
+    }),
+    /* جمع رأسي */
+    addV: (lang, lo, hi, mode) => () => mk(12, () => {
+      let a, b;
+      for (let k = 0; k < 80; k++) {
+        a = ri(lo, hi); b = ri(lo, hi);
+        const u = (a % 10) + (b % 10), okm = mode === 'noreg' ? u < 10 : mode === 'reg' ? u >= 10 : true;
+        if (okm && a + b < 1000) break;
+      }
+      return numQ(T(lang, 'أوجد ناتج الجمع:', 'Find the sum:'), a + b, { vert: vert(a, b, '+') });
+    }),
+    /* طرح رأسي */
+    subV: (lang, lo, hi, mode) => () => mk(12, () => {
+      let a, b;
+      for (let k = 0; k < 80; k++) {
+        a = ri(lo, hi); b = ri(lo, hi);
+        if (a < b) { const t = a; a = b; b = t; }
+        const okm = mode === 'noreg' ? (a % 10) >= (b % 10) : mode === 'reg' ? (a % 10) < (b % 10) : true;
+        if (okm && a > b) break;
+      }
+      return numQ(T(lang, 'أوجد ناتج الطرح:', 'Find the difference:'), a - b, { vert: vert(a, b, '−') });
+    }),
+    /* عمليات أفقية بسيطة: kind = add | sub | mix */
+    simple: (lang, kind, lo, hi) => () => mk(12, () => {
+      let a = ri(lo, hi), b = ri(lo, hi); const sub = kind === 'sub' || (kind === 'mix' && Math.random() < .5);
+      if (sub) { if (a < b) { const t = a; a = b; b = t; } return numQ('{{' + a + ' − ' + b + ' = ?}}', a - b); }
+      return numQ('{{' + a + ' + ' + b + ' = ?}}', a + b);
+    }),
+    doubles: lang => () => mk(12, () => {
+      const n = ri(1, 12), near = Math.random() < .4;
+      if (near) return Object.assign(numQ('{{' + n + ' + ' + (n + 1) + ' = ?}}', 2 * n + 1), { hint: T(lang, 'فكّر: ' + n + ' + ' + n + ' ثم زِد ١', 'Think: ' + n + ' + ' + n + ' then add 1') });
+      return Object.assign(numQ('{{' + n + ' + ' + n + ' = ?}}', 2 * n), { hint: T(lang, 'ضِعف العدد ' + n, 'Double of ' + n) });
+    }),
+    makeTen: lang => () => mk(12, () => {
+      if (Math.random() < .5) { const a = ri(1, 9); return opts('{{' + a + ' + ' + BOX + ' = 10}}', 10 - a, [11 - a, 9 - a, 10 - a + 2].filter(x => x >= 0 && x !== 10 - a).slice(0, 3)); }
+      const a = ri(6, 9), b = ri(3, 9 - 0); return Object.assign(numQ('{{' + a + ' + ' + b + ' = ?}}', a + b), { hint: T(lang, 'كوِّن ١٠ أولاً: ' + a + ' + ' + (10 - a) + ' = ١٠', 'Make ten first: ' + a + ' + ' + (10 - a) + ' = 10') });
+    }),
+    tenMore: lang => () => mk(12, () => {
+      const a = ri(11, 89), up = Math.random() < .5, c = up ? a + 10 : a - 10;
+      return Object.assign(numQ('{{' + a + (up ? ' + ' : ' − ') + '10 = ?}}', c), { hint: T(lang, up ? 'الجمع ١٠ يزيد رقم العشرات ١' : 'الطرح ١٠ ينقص رقم العشرات ١', up ? 'Adding 10 makes the tens digit go up by 1' : 'Subtracting 10 makes the tens digit go down by 1') });
+    }),
+    missing: lang => () => mk(12, () => {
+      const c = ri(6, 20), a = ri(1, c - 1), k = ri(0, 2);
+      if (k === 0) return opts('{{' + a + ' + ' + BOX + ' = ' + c + '}}', c - a, [c - a + 1, c - a - 1, c - a + 2].filter(x => x >= 0));
+      if (k === 1) return opts('{{' + BOX + ' + ' + a + ' = ' + c + '}}', c - a, [c - a + 1, c - a - 1, c + a].filter(x => x >= 0));
+      return opts('{{' + c + ' − ' + BOX + ' = ' + a + '}}', c - a, [c - a + 1, c + a, c - a - 1].filter(x => x >= 0));
+    }),
+    skip: (lang, steps) => () => mk(12, () => {
+      const s = rand(steps), start = s === 100 ? ri(1, 5) * 100 : s === 10 ? ri(1, 5) * 10 : ri(1, 10) * (s === 5 ? 5 : 2) - (s === 2 ? ri(0, 1) : 0);
+      const seq = mk(6, i => start + i * s), miss = ri(1, 4), ans = seq[miss];
+      const shown = seq.map((v, i) => (i === miss ? BOX : v)).join(' , ');
+      return opts(T(lang, 'أكمل العدّ بـ ' + s + ':', 'Skip count by ' + s + ':') + ' {{' + shown + '}}', ans, [ans + s, ans - s, ans + 1].filter(x => x >= 0 && x !== ans));
+    }),
+    /* قيمة الرقم ومنزلته (٣ أرقام) */
+    place: lang => () => mk(12, () => {
+      const n = rn3(), s = String(n), pos = ri(0, 2), d = +s[2 - pos], val = d * Math.pow(10, pos);
+      if (Math.random() < .55) return opts(T(lang, 'ما قيمة الرقم ' + d + ' في العدد {{' + n + '}} ؟', 'What is the value of the digit ' + d + ' in {{' + n + '}}?'), val, [d, d * 10, d * 100].filter(x => x !== val));
+      const names = T(lang, ['الآحاد', 'العشرات', 'المئات'], ['ones', 'tens', 'hundreds']);
+      return opts(T(lang, 'ما منزلة الرقم ' + d + ' في العدد {{' + n + '}} ؟', 'What is the place of the digit ' + d + ' in {{' + n + '}}?'), names[pos], names.filter((x, i) => i !== pos));
+    }),
+    /* الصورة الممتدة والصورة القياسية */
+    expanded: lang => () => mk(12, () => {
+      const n = rn3(), s = String(n), h = +s[0], t = +s[1], o = +s[2];
+      const k = ri(0, 2);
+      if (k === 0) return opts(T(lang, 'اكتب العدد {{' + n + '}} على الصورة الممتدة:', 'Write {{' + n + '}} in expanded form:'), '{{' + h * 100 + ' + ' + t * 10 + ' + ' + o + '}}', ['{{' + h * 10 + ' + ' + t * 100 + ' + ' + o + '}}', '{{' + h * 100 + ' + ' + t + ' + ' + o * 10 + '}}', '{{' + h * 100 + ' + ' + o * 10 + ' + ' + t + '}}']);
+      if (k === 1) return opts('{{' + h * 100 + ' + ' + t * 10 + ' + ' + o + ' = ?}}', n, [String(h) + o + t, String(t) + h + o, String(o) + t + h]);
+      const h2 = ri(1, 9), o2 = ri(1, 9), n2 = h2 * 100 + o2;
+      return opts('{{' + h2 * 100 + ' + ' + o2 + ' = ?}}', n2, [h2 * 10 + o2, h2 * 100 + o2 * 10, h2 * 100 + o2 + 10]);
+    }),
+    words: () => () => mk(12, () => {
+      const n = ri(1, 9) * 100 + (Math.random() < .4 ? 0 : ri(1, 9) * 10 + (Math.random() < .5 ? 0 : ri(1, 9)));
+      const wrong = shuffle([n + 10, n - 10, n + 100, n - 100, n + 1].filter(x => x > 99 && x < 1000 && x !== n)).slice(0, 3);
+      return { q: 'Which number is “' + numWords(n) + '”?', options: [String(n)].concat(wrong.map(String)), answer: 0, hint: '', visual: '' };
+    }),
+    compare: lang => () => mk(12, () => {
+      const mode = ri(0, 2); let a, b, txt = '';
+      if (mode === 0) { a = ri(100, 999); b = Math.random() < .12 ? a : ri(100, 999); txt = '{{' + a + ' ' + BOX + ' ' + b + '}}'; }
+      else if (mode === 1) { a = ri(11, 99); b = ri(101, 999); if (Math.random() < .5) { const t = a; a = b; b = t; } txt = '{{' + a + ' ' + BOX + ' ' + b + '}}'; }
+      else { const h = ri(1, 9), t = ri(0, 9), o = ri(0, 9); a = h * 100 + t * 10 + o; b = Math.random() < .2 ? a : ri(100, 999); txt = '{{' + (h * 100) + ' + ' + (t * 10) + ' + ' + o + ' ' + BOX + ' ' + b + '}}'; }
+      const c = a > b ? '>' : a < b ? '<' : '=';
+      return { q: T(lang, 'اختر العلامة الصحيحة (أكبر من / أصغر من / يساوي):', 'Choose the correct sign (greater / less / equal):') + ' ' + txt, options: ['{{' + c + '}}'].concat(['>', '<', '='].filter(x => x !== c).map(x => '{{' + x + '}}')), answer: 0, hint: '', visual: '' };
+    }),
+    order: lang => () => mk(12, () => {
+      const nums = pickN([ri(100, 400), ri(401, 700), ri(701, 999), ri(11, 99)], 3).filter((v, i, a) => a.indexOf(v) === i);
+      while (nums.length < 3) nums.push(ri(100, 999));
+      const asc = nums.slice().sort((x, y) => x - y), k = ri(0, 3);
+      if (k === 0) return opts(T(lang, 'ما أكبر عدد؟', 'Which is the greatest number?'), asc[2], [asc[0], asc[1]], { visual: nums.join('   ') });
+      if (k === 1) return opts(T(lang, 'ما أصغر عدد؟', 'Which is the smallest number?'), asc[0], [asc[1], asc[2]], { visual: nums.join('   ') });
+      const fmtSeq = a => '{{' + a.join(' , ') + '}}';
+      const perms = [[0, 2, 1], [1, 0, 2], [2, 1, 0], [1, 2, 0]].map(p => p.map(i => asc[i]));
+      if (k === 2) return { q: T(lang, 'رتّب تصاعديًا (من الأصغر إلى الأكبر):', 'Arrange in ascending order (smallest to greatest):') + ' ' + fmtSeq(nums), options: [fmtSeq(asc)].concat(perms.slice(0, 3).map(fmtSeq)), answer: 0, hint: '', visual: '' };
+      const desc = asc.slice().reverse(), permsD = [[0, 2, 1], [1, 0, 2], [2, 1, 0], [1, 2, 0]].map(p => p.map(i => desc[i]));
+      return { q: T(lang, 'رتّب تنازليًا (من الأكبر إلى الأصغر):', 'Arrange in descending order (greatest to smallest):') + ' ' + fmtSeq(nums), options: [fmtSeq(desc)].concat(permsD.slice(0, 3).map(fmtSeq)), answer: 0, hint: '', visual: '' };
+    }),
+    /* مسائل لفظية */
+    story: lang => () => mk(12, () => {
+      const g = Math.random() < .5, k = ri(0, 3), a = ri(4, 10), b = ri(3, a - 1 > 3 ? a - 1 : 3);
+      const nm = lang === 'ar' ? rand(g ? ['ليلى', 'سلمى', 'مريم', 'هدى'] : ['أحمد', 'يوسف', 'عمر', 'علي']) : rand(g ? ['Mona', 'Laila', 'Nada', 'Hoda'] : ['Ali', 'Omar', 'Youssef', 'Ahmed']);
+      if (k === 0) return numQ(T(lang, 'مع ' + nm + ' ' + a + ' قطع حلوى، ' + (g ? 'أكلت' : 'أكل') + ' منها ' + b + '. كم قطعة بقيت؟', nm + ' had ' + a + ' sweets and ate ' + b + '. How many sweets are left?'), a - b);
+      if (k === 1) return numQ(T(lang, (g ? 'اشترت ' : 'اشترى ') + nm + ' ' + a + ' أقلام ثم ' + (g ? 'اشترت ' : 'اشترى ') + b + ' أقلام أخرى. كم قلمًا صار مع ' + nm + '؟', nm + ' has ' + a + ' pencils and buys ' + b + ' more. How many pencils now?'), a + b);
+      if (k === 2) return numQ(T(lang, 'في الحديقة ' + a + ' ورود حمراء و' + b + ' ورود بيضاء. كم وردة في الحديقة؟', 'There are ' + a + ' red flowers and ' + b + ' white flowers. How many flowers in all?'), a + b);
+      return numQ(T(lang, 'في الفصل ' + (a + b) + ' تلميذًا، منهم ' + a + ' بنات. كم عدد الأولاد؟', 'There are ' + (a + b) + ' kids in the class. ' + a + ' are girls. How many are boys?'), b);
+    }),
+    /* تقدير: نحذف الآحاد (نحافظ على العشرات ونكتب صفرًا) كما في المذكرة */
+    estimate: () => () => mk(12, () => {
+      const a = ri(11, 99), b = ri(11, 60), plus = Math.random() < .5, A = Math.floor(a / 10) * 10, B = Math.floor(b / 10) * 10;
+      if (Math.random() < .4) return opts('Estimate: {{' + a + ' → ?}}', A, [A + 10, A - 10, a].filter(x => x >= 0 && x !== A));
+      const ans = plus ? A + B : Math.max(A, B) - Math.min(A, B); const aa = plus ? a : Math.max(a, b), bb = plus ? b : Math.min(a, b);
+      return numQ('Estimate: {{' + aa + (plus ? ' + ' : ' − ') + bb + ' ≈ ?}}', ans, {});
+    })
+  };
+  return { ri, pickN, mk, T, Q, H, V, TA, TE, numQ, opts, vert, numWords, M, shuffle, rand, BOX };
+})();
+
+/* ============================================================
+   اللغة العربية — الصف الثاني الابتدائي — الفصل الدراسي الأول
+   المصدر: كتاب الوزارة + مذكرات الأساليب والقواعد النحوية
+   ============================================================ */
+(function () {
+  'use strict';
+  const { Q, H, TA, mk, pickN, shuffle, rand, ri } = HAH, add = HA.add, S = 'arabic';
+  const U1 = 'الوحدة الأولى: المعاملة الطيبة', U2 = 'الوحدة الثانية: عادات صحية', U3 = 'الوحدة الثالثة: الرياضة والتكنولوجيا', UR = 'قواعد الإملاء والنطق';
+
+  /* ---------- المفرد والمثنى ---------- */
+  const MUTH = ['قلم', 'مدرسة', 'وجه', 'بيت', 'ولد', 'طفل', 'شجرة', 'كتاب', 'وردة', 'حقيبة', 'معلمة', 'طبيب', 'فلاح', 'عصفور', 'قطة', 'بطة', 'تفاحة', 'سمكة', 'نجمة', 'جبل', 'حديقة', 'حصان', 'طالبة', 'مهندس'];
+  const dual = w => (w.endsWith('ة') ? w.slice(0, -1) + 'تان' : w + 'ان');
+  const COL = ['حمراء', 'خضراء', 'صفراء', 'سوداء', 'بيضاء', 'زرقاء', 'سمراء', 'صحراء'];
+  const genMuth = () => {
+    const out = [];
+    MUTH.forEach(w => {
+      const c = dual(w), wrong = w.endsWith('ة') ? [w + 'ان', w.slice(0, -1) + 'ات', w.slice(0, -1) + 'ان'] : [w + 'ات', w + 'ون', 'ال' + w];
+      out.push(Q('ما مثنى كلمة (' + w + ') ؟', c, ...wrong));
+      out.push(Q('ما مفرد كلمة (' + c + ') ؟', w, ...pickN(MUTH.filter(x => x !== w), 2)));
+    });
+    COL.forEach(w => out.push(Q('ما مثنى كلمة (' + w + ') ؟', w.replace('اء', 'اوان'), w + 'ان', w.replace('اء', 'تان'))));
+    return out;
+  };
+  add(S, U1, 'ar-muthanna', 'المفرد والمثنى', '2️⃣', () => genMuth().concat([
+    Q('أي الكلمات التالية مثنى؟', 'طبيبان', 'أطباء', 'طبيب'),
+    Q('المفرد: ما دلّ على ...', 'واحد أو واحدة', 'اثنين أو اثنتين', 'ثلاثة أو أكثر'),
+    Q('المثنى: ما دلّ على ...', 'اثنين أو اثنتين', 'واحد أو واحدة', 'ثلاثة أو أكثر'),
+    Q('عند حذف (ان) أو (ين) من المثنى نعود إلى:', 'المفرد', 'الجمع', 'الفعل'),
+    Q('كلمة (شعبان) ليست مثنى لأنها:', 'اسم شهر لا يدل على اثنين', 'تدل على ثلاثة', 'جمع'),
+    Q('كلمة (عثمان) ليست مثنى لأنها:', 'اسم شخص لا يدل على اثنين', 'فعل ماضٍ', 'تدل على ثلاثة'),
+    Q('المثنى يكون:', 'اسمًا', 'فعلًا', 'حرفًا'),
+    Q('اشتريت ........ جديدين.', 'قلمين', 'قلمان', 'أقلام'),
+    Q('شاهدتُ ........ في حديقة الحيوان.', 'أسدين', 'أسدان', 'أسد'),
+    Q('........ يتعاونان على الخير.', 'الأخوان', 'الأخ', 'الإخوة'),
+    Q('ثنِّ الجملة: الولد مؤدب.', 'الولدان مؤدبان', 'الولدان مؤدب', 'الولد مؤدبان'),
+    Q('ثنِّ الجملة: الطبيبة بارعة.', 'الطبيبتان بارعتان', 'الطبيبتان بارعة', 'الطبيبة بارعتان'),
+    Q('ثنِّ الجملة: الفلاحة نشيطة.', 'الفلاحتان نشيطتان', 'الفلاحتان نشيطة', 'الفلاحة نشيطتان'),
+    Q('ثنِّ الجملة: التلميذ متفوق.', 'التلميذان متفوقان', 'التلميذان متفوق', 'التلميذ متفوقان')
+  ]), { n: 8, note: 'المفرد يدل على واحد، والمثنى يدل على اثنين بزيادة (ان) أو (ين) على المفرد. وإذا انتهى المفرد بتاء مربوطة (ة) تتحول إلى تاء مفتوحة (ت): قصّة ← قصّتان.' });
+
+  /* ---------- تحليل الكلمات إلى مقاطع صوتية ---------- */
+  const SEG = [['كَتَبَ', 3, 'كَ / تَ / بَ'], ['لَعِبَ', 3, 'لَ / عِ / بَ'], ['شَرِبَ', 3, 'شَ / رِ / بَ'], ['بَابٌ', 2, 'بَا / بٌ'], ['أَبِي', 2, 'أَ / بِي'], ['أَخُوكَ', 3, 'أَ / خُو / كَ'], ['تَمْرٌ', 2, 'تَمْ / رٌ'], ['صَوْتٌ', 2, 'صَوْ / تٌ'], ['فَهْدٌ', 2, 'فَهْ / دٌ'], ['أُمِّي', 2, 'أُمْ / مِي'], ['سَلَّمَ', 3, 'سَلْ / لَ / مَ'], ['مَدَّ', 2, 'مَدْ / دَ'], ['قَلَمٌ', 3, 'قَ / لَ / مٌ'], ['قَلْبٌ', 2, 'قَلْ / بٌ'], ['تَاجٌ', 2, 'تَا / جٌ'], ['تِينٌ', 2, 'تِي / نٌ'], ['تُوتٌ', 2, 'تُو / تٌ'], ['عَلَّمَ', 3, 'عَلْ / لَ / مَ']];
+  add(S, U1, 'ar-segments', 'تحليل الكلمات إلى مقاطع صوتية', '🔊', () => {
+    const out = [];
+    SEG.forEach(s => {
+      out.push(Q('كم مقطعًا صوتيًا في كلمة (' + s[0] + ') ؟', String(s[1]), ...['2', '3', '4'].filter(x => x !== String(s[1])).slice(0, 2)));
+      out.push(Q('حلّل كلمة (' + s[0] + ') إلى مقاطع صوتية:', s[2], ...pickN(SEG.filter(x => x[0] !== s[0] && x[1] === s[1]).map(x => x[2]), 2)));
+    });
+    return out.concat([
+      Q('المقطع القصير يتكوّن من:', 'حرف متحرك', 'حرف ساكن فقط', 'حرفين ساكنين'),
+      Q('المقطع الطويل يتكوّن من:', 'حرف متحرك + حرف ساكن، أو حرف ممدود + حرف مدّ', 'حرف متحرك فقط', 'حرف ساكن فقط'),
+      Q('الحرف المشدد يُفَكّ إلى:', 'ساكن + متحرك', 'متحرك + متحرك', 'ساكن + ساكن'),
+      Q('ادمج المقاطع: (شَ / رِ / بَ)', 'شَرِبَ', 'شَرْبَ', 'شِرَبَ')
+    ]);
+  }, { n: 8, note: 'المقطع القصير = حرف متحرك (لَ). المقطع الطويل = متحرك + ساكن (تَمْ) أو حرف ممدود + حرف مدّ (بَا). والحرف المشدّد يُفَكّ إلى ساكن ثم متحرك.' });
+
+  /* ---------- أسماء الإشارة للقريب ---------- */
+  const PARTS = ['هذا', 'هذه', 'هذان', 'هاتان', 'هؤلاء'];
+  const DEM = [['طبيب', 'هذا'], ['تلميذ', 'هذا'], ['فلاح', 'هذا'], ['سائح', 'هذا'], ['طبيبة', 'هذه'], ['تلميذة', 'هذه'], ['فلاحة', 'هذه'], ['سائحة', 'هذه'], ['كتب', 'هذه'], ['شوارع', 'هذه'], ['حيوانات', 'هذه'], ['أهرامات', 'هذه'], ['طيور', 'هذه'], ['طبيبان', 'هذان'], ['تلميذان', 'هذان'], ['فلاحان', 'هذان'], ['سائحان', 'هذان'], ['ولدان', 'هذان'], ['طبيبتان', 'هاتان'], ['تلميذتان', 'هاتان'], ['فلاحتان', 'هاتان'], ['سائحتان', 'هاتان'], ['بنتان', 'هاتان'], ['أطباء', 'هؤلاء'], ['تلاميذ', 'هؤلاء'], ['معلمون', 'هؤلاء'], ['معلمات', 'هؤلاء'], ['فلاحون', 'هؤلاء'], ['سائحون', 'هؤلاء'], ['أولاد', 'هؤلاء'], ['بنات', 'هؤلاء']];
+  add(S, U1, 'ar-dem-near', 'أسماء الإشارة للقريب', '👉', () => DEM.map(d => Q('ضع اسم إشارة مناسبًا: ........ ' + d[0], d[1], ...pickN(PARTS.filter(p => p !== d[1]), 3))).concat([
+    Q('(هذا) اسم إشارة للمفرد ...', 'المذكر', 'المؤنث', 'الجمع'),
+    Q('(هذه) اسم إشارة للمفردة المؤنثة ولجمع ...', 'غير العاقل', 'العاقل', 'المثنى'),
+    Q('(هذان) اسم إشارة للمثنى ...', 'المذكر', 'المؤنث', 'الجمع'),
+    Q('(هاتان) اسم إشارة للمثنى ...', 'المؤنث', 'المذكر', 'الجمع'),
+    Q('(هؤلاء) اسم إشارة لجمع ...', 'المذكر والمؤنث العاقل', 'غير العاقل', 'المفرد'),
+    Q('حدّد اسم الإشارة: هذا صانع ماهر.', 'هذا', 'صانع', 'ماهر'),
+    Q('حدّد اسم الإشارة: هؤلاء رجال مخلصون.', 'هؤلاء', 'رجال', 'مخلصون'),
+    Q('........ أبطال المقاومة المنتصرون.', 'هؤلاء', 'هذه', 'هذان'),
+    Q('........ شاعرتان مبدعتان.', 'هاتان', 'هذان', 'هؤلاء')
+  ]), { n: 8, note: 'هذا: للمفرد المذكر • هذه: للمفردة المؤنثة ولجمع غير العاقل • هذان: للمثنى المذكر • هاتان: للمثنى المؤنث • هؤلاء: لجمع المذكر والمؤنث العاقل.' });
+
+  /* ---------- ذلك وتلك ---------- */
+  const FAR = [['نجم', 'ذلك'], ['قمر', 'ذلك'], ['أسد', 'ذلك'], ['غراب', 'ذلك'], ['كوكب', 'ذلك'], ['سحاب', 'ذلك'], ['صاروخ', 'ذلك'], ['جبل', 'ذلك'], ['طائر', 'ذلك'], ['شمس', 'تلك'], ['طائرة', 'تلك'], ['سفينة', 'تلك'], ['حمامة', 'تلك'], ['سحابة', 'تلك'], ['وردة', 'تلك'], ['زرافة', 'تلك'], ['تفاحة', 'تلك'], ['أشجار', 'تلك'], ['أعلام', 'تلك'], ['كواكب', 'تلك'], ['أنهار', 'تلك'], ['طيور', 'تلك'], ['مدارس', 'تلك'], ['بلاد', 'تلك']];
+  add(S, U2, 'ar-dem-far', 'أسماء الإشارة للبعيد (ذلك – تلك)', '🔭', () => FAR.map(d => Q('ضع اسم إشارة للبعيد: ........ ' + d[0], d[1], d[1] === 'ذلك' ? 'تلك' : 'ذلك', 'هذا')).concat([
+    Q('(ذلك) اسم إشارة للمفرد ... البعيد', 'المذكر', 'المؤنث', 'المثنى'),
+    Q('(تلك) اسم إشارة للمفردة المؤنثة البعيدة ولجمع ...', 'غير العاقل', 'العاقل', 'المثنى'),
+    Q('نستخدم (ذلك) و(تلك) للإشارة إلى:', 'البعيد', 'القريب', 'الفعل')
+  ]), { n: 8, note: 'ذلك: للمفرد المذكر البعيد (ذلك نجمٌ). تلك: للمفردة المؤنثة البعيدة ولجمع غير العاقل (تلك شمسٌ – تلك بلادٌ).' });
+
+  /* ---------- اللام الشمسية والقمرية ---------- */
+  const SHM = ['التفاح', 'الثعبان', 'الدرس', 'الذئب', 'الرمش', 'الزرع', 'السمك', 'الشمس', 'الصقر', 'الضوء', 'الطائر', 'الظرف', 'اللون', 'النهر', 'النجم', 'الليل', 'الرجل', 'الزهرة', 'التين', 'الثوم', 'الدار', 'الصوت', 'الطريق', 'النسر', 'السحاب', 'الشجرة', 'الذهب', 'الثلج', 'الدواء', 'الضبع'];
+  const QMR = ['الأرنب', 'البحر', 'الجمل', 'الحمار', 'الخروف', 'العنب', 'الغراب', 'الفراولة', 'الكتاب', 'القمر', 'الكلب', 'الموز', 'الهرم', 'الولد', 'اليد', 'المطر', 'الملك', 'القلم', 'اليوم', 'الوردة', 'الفيل', 'الباب', 'الحديقة', 'الخبز', 'العسل', 'الغابة', 'القطة', 'الكرة', 'المدرسة', 'الهدهد'];
+  add(S, U2, 'ar-lam', 'اللام الشمسية واللام القمرية', '☀️', () => {
+    const out = [];
+    SHM.forEach(w => out.push(Q('اللام في كلمة (' + w + ') لام ...', 'شمسية ☀️', 'قمرية 🌙')));
+    QMR.forEach(w => out.push(Q('اللام في كلمة (' + w + ') لام ...', 'قمرية 🌙', 'شمسية ☀️')));
+    for (let i = 0; i < 12; i++) {
+      out.push(Q('أي الكلمات فيها لام شمسية؟', rand(SHM), ...pickN(QMR, 2)));
+      out.push(Q('أي الكلمات فيها لام قمرية؟', rand(QMR), ...pickN(SHM, 2)));
+    }
+    return out.concat([
+      Q('اللام الشمسية:', 'لا تُنطق ويكون الحرف بعدها مشددًا', 'تُنطق دائمًا', 'تأتي مع الفعل فقط'),
+      Q('اللام القمرية:', 'تُنطق وتُكتب وفوقها سكون', 'لا تُنطق', 'يكون الحرف بعدها مشددًا'),
+      Q('كلمة (الذي) لا توصف بأنها شمسية أو قمرية لأن:', 'اللام من أصل الكلمة', 'اللام مشددة', 'الكلمة فعل')
+    ]);
+  }, { n: 8, note: 'اللام الشمسية لا تُنطق ويأتي بعدها حرف مشدد (الشَّمس). حروفها: ت ث د ذ ر ز س ش ص ض ط ظ ل ن. أما القمرية فتُنطق (القَمر) وحروفها: أ ب ج ح خ ع غ ف ق ك م و ه ي.' });
+
+  /* ---------- ظرف الزمان وظرف المكان ---------- */
+  const TIME = ['صباحًا', 'مساءً', 'ظهرًا', 'عصرًا', 'ليلًا', 'نهارًا', 'صيفًا', 'شتاءً', 'ربيعًا', 'خريفًا', 'غدًا', 'أمسِ', 'فجرًا', 'عشاءً'];
+  const PLACE = ['فوق', 'تحت', 'أمام', 'خلف', 'داخل', 'خارج', 'حول', 'بين', 'يمينًا', 'يسارًا', 'شمالًا', 'جنوبًا', 'شرقًا', 'غربًا'];
+  add(S, U2, 'ar-adverbs', 'ظرف الزمان وظرف المكان', '⏰', () => {
+    const out = [];
+    TIME.forEach(w => out.push(Q('الكلمة (' + w + ') ظرف ...', 'زمان ⏰', 'مكان 📍')));
+    PLACE.forEach(w => out.push(Q('الكلمة (' + w + ') ظرف ...', 'مكان 📍', 'زمان ⏰')));
+    return out.concat([
+      Q('جاء بكّار صباحًا. ظرف الزمان هو:', 'صباحًا', 'جاء', 'بكّار'),
+      Q('نزل المطر مساءً. ظرف الزمان هو:', 'مساءً', 'نزل', 'المطر'),
+      Q('وقفت أميرة خلف البنت. ظرف المكان هو:', 'خلف', 'وقفت', 'أميرة'),
+      Q('جلس بكّار فوق البساط. ظرف المكان هو:', 'فوق', 'جلس', 'بكّار'),
+      Q('تشتد الحرارة صيفًا. ظرف الزمان هو:', 'صيفًا', 'تشتد', 'الحرارة'),
+      Q('يجلس الأحفاد حول الجد. ظرف المكان هو:', 'حول', 'يجلس', 'الأحفاد'),
+      Q('ظرف الزمان يُسأل عنه بـ:', 'متى؟', 'أين؟', 'كيف؟'),
+      Q('ظرف المكان يُسأل عنه بـ:', 'أين؟', 'متى؟', 'كيف؟'),
+      Q('يعيش الأسد ........ الغابة. (داخل – صباحًا)', 'داخل', 'صباحًا', 'غدًا'),
+      Q('تشرق الشمس ........ (صباحًا – تحت)', 'صباحًا', 'تحت', 'خلف')
+    ]);
+  }, { n: 8, note: 'ظرف الزمان: اسم يدل على زمن حدوث الفعل ويُجيب عن (متى؟) مثل: صباحًا، مساءً، غدًا. ظرف المكان: اسم يدل على مكان حدوث الفعل ويُجيب عن (أين؟) مثل: فوق، تحت، أمام، خلف.' });
+
+  /* ---------- أسلوب الأمر ---------- */
+  add(S, U3, 'ar-amr', 'أسلوب الأمر', '📣', [
+    Q('فعل الأمر هو:', 'طلب حدوث فعل بعد زمن التكلم', 'ما حدث في الماضي', 'ما يحدث الآن فقط'),
+    Q('الجملة التي تبدأ بفعل أمر هي:', 'ذاكر دروسك.', 'الولد يذاكر دروسه.', 'ذاكر الولد.'),
+    Q('أمر الفعل (يكتب):', 'اكتب', 'كتب', 'يكتب'),
+    Q('أمر الفعل (يذهب):', 'اذهب', 'ذهب', 'يذهب'),
+    Q('أمر الفعل (يشارك):', 'شارك', 'شاركت', 'يشارك'),
+    Q('أمر الفعل (يساعد):', 'ساعد', 'ساعدت', 'يساعد'),
+    Q('أمر الفعل (يستخرج):', 'استخرج', 'استخرجت', 'يستخرج'),
+    Q('أمر الفعل (يستمع):', 'استمع', 'استمعت', 'يستمع'),
+    Q('عند توجيه الأمر إلى المفردة المؤنثة نضيف:', 'ياء المخاطبة', 'ألف الاثنين', 'واو الجماعة'),
+    Q('أمر الفعل (يقرأ) للمفردة المؤنثة:', 'اقرئي', 'اقرأ', 'تقرأ'),
+    Q('أمر الفعل (ينظّف) للمفردة المؤنثة:', 'نظّفي', 'نظّف', 'ينظّف'),
+    Q('يا خالد، ........ الواجب.', 'اكتب', 'اكتبي', 'تكتب'),
+    Q('يا مريم، ........ الواجب.', 'اكتبي', 'اكتب', 'يكتب'),
+    Q('يا سعيد، ........ شجرة.', 'ازرع', 'ازرعي', 'زرع'),
+    Q('يا فاطمة، ........ الدواء.', 'اشربي', 'اشرب', 'شربت'),
+    Q('يا جابر، ........ الدرس.', 'اشرح', 'اشرحي', 'شرح'),
+    Q('يا حنان، ........ الطعام.', 'كلي', 'كُلْ', 'أكلت'),
+    Q('يا سمير، ........ من القاعة.', 'اخرج', 'اخرجي', 'خرج'),
+    Q('يا رزان، ........ من القاعة.', 'اخرجي', 'اخرج', 'خرجت'),
+    Q('يا علي، ........ على صلاتك.', 'حافظ', 'حافظي', 'حافظت'),
+    Q('يا هدى، ........ أسنانك.', 'نظّفي', 'نظّف', 'نظّفت')
+  ], { n: 8, note: 'فعل الأمر يطلب فعل شيء في المستقبل: اكتب – ذاكر – ارسم. وعند توجيهه للمفردة المؤنثة نضيف ياء المخاطبة: اكتبي – ذاكري – ارسمي.' });
+
+  /* ---------- أسلوب النهي ---------- */
+  add(S, U3, 'ar-nahy', 'أسلوب النهي (لا الناهية)', '🚫', [
+    Q('لا الناهية تفيد:', 'الكفّ عن فعل شيء', 'طلب فعل شيء', 'السؤال عن شيء'),
+    Q('يتكوّن أسلوب النهي من:', 'لا الناهية + فعل مضارع أوله تاء', 'لا + اسم', 'فعل ماضٍ + لا'),
+    Q('حوّل إلى نهي: محمود يسرع في الطريق.', 'لا تسرع في الطريق.', 'أسرع في الطريق.', 'لا يسرع في الطريق.'),
+    Q('حوّل إلى نهي: أحمد يهمل في الدرس.', 'لا تهمل في الدرس.', 'أهمل في الدرس.', 'لا يهمل في الدرس.'),
+    Q('حوّل إلى نهي: أمل تكذب على الناس.', 'لا تكذبي على الناس.', 'لا تكذب على الناس.', 'اكذبي على الناس.'),
+    Q('حوّل إلى نهي: هدى تستمع إلى الموسيقى.', 'لا تستمعي إلى الموسيقى.', 'لا تستمع إلى الموسيقى.', 'استمعي إلى الموسيقى.'),
+    Q('حوّل إلى نهي: مازن يلعب في الشارع.', 'لا تلعب في الشارع.', 'العب في الشارع.', 'لا يلعب في الشارع.'),
+    Q('حوّل إلى نهي: محمود يرفع صوته.', 'لا ترفع صوتك.', 'ارفع صوتك.', 'لا يرفع صوته.'),
+    Q('عند توجيه النهي إلى المفردة المؤنثة نضيف:', 'ياء المخاطبة', 'ألف الاثنين', 'واو الجماعة'),
+    Q('حدّد نوع الأسلوب: لا تلعب في الحديقة.', 'نهي', 'أمر', 'استفهام'),
+    Q('حدّد نوع الأسلوب: العب في الفناء.', 'أمر', 'نهي', 'استفهام'),
+    Q('حدّد نوع الأسلوب: لا تتأخر عن الدرس.', 'نهي', 'أمر', 'استفهام'),
+    Q('حدّد نوع الأسلوب: افهم الدرس.', 'أمر', 'نهي', 'استفهام'),
+    Q('حدّد نوع الأسلوب: اشرب الحليب.', 'أمر', 'نهي', 'استفهام'),
+    Q('حدّد نوع الأسلوب: لا تكتب على الجدران.', 'نهي', 'أمر', 'استفهام'),
+    Q('حوّل إلى نهي: افتح النافذة.', 'لا تفتح النافذة.', 'افتح النافذة.', 'لا يفتح النافذة.'),
+    Q('حوّل إلى أمر: لا تركب القطار.', 'اركب القطار.', 'لا تركب القطار.', 'لا يركب القطار.'),
+    Q('حوّل إلى أمر: لا تركبي الحصان.', 'اركبي الحصان.', 'اركب الحصان.', 'لا تركبي الحصان.'),
+    Q('يا محمد، لا ........ في الشارع.', 'تلعب', 'العب', 'لعب'),
+    Q('يا حنان، لا ........ دروسك.', 'تهملي', 'تهمل', 'أهملي')
+  ], { n: 8, note: 'أسلوب النهي = (لا) الناهية + فعل مضارع أوله تاء: لا تُهمِلْ دروسك. وللمفردة المؤنثة نضيف ياء المخاطبة: لا تُهمِلي دروسك.' });
+
+  /* ---------- الأسماء الموصولة ---------- */
+  add(S, U3, 'ar-relative', 'الأسماء الموصولة (الذي – التي)', '🔗', [
+    Q('الاسم الموصول (الذي) يُستخدم مع:', 'المفرد المذكر', 'المفردة المؤنثة', 'المثنى'),
+    Q('الاسم الموصول (التي) يُستخدم مع:', 'المفردة المؤنثة', 'المفرد المذكر', 'جمع المذكر العاقل'),
+    Q('حضر التلميذ ........ فاز بالمسابقة.', 'الذي', 'التي', 'اللذان'),
+    Q('حضرت التلميذة ........ فازت بالمسابقة.', 'التي', 'الذي', 'اللذان'),
+    Q('الأسد ........ في القفص مفترس.', 'الذي', 'التي', 'اللاتي'),
+    Q('الزرافة ........ في الحديقة جميلة.', 'التي', 'الذي', 'اللذان'),
+    Q('السيارة ........ اشتراها أبي جميلة.', 'التي', 'الذي', 'اللذين'),
+    Q('الحذاء ........ اشتراه أبي جميل.', 'الذي', 'التي', 'اللاتي'),
+    Q('الأزهار ........ في الحديقة متنوعة.', 'التي', 'الذي', 'اللذان'),
+    Q('الأسماك ........ في الحوض متنوعة.', 'التي', 'الذي', 'اللذين'),
+    Q('أحمد هو ........ نجح في الامتحان.', 'الذي', 'التي', 'اللذان'),
+    Q('حنان هي ........ نجحت في الامتحان.', 'التي', 'الذي', 'اللذان'),
+    Q('أمي هي ........ ربّتني وعلّمتني.', 'التي', 'الذي', 'اللذان'),
+    Q('أبي هو ........ يعمل في المصنع.', 'الذي', 'التي', 'اللاتي'),
+    Q('الكتاب ........ اشتريته مفيد.', 'الذي', 'التي', 'اللذان'),
+    Q('القصة ........ اشتريتها مسلّية.', 'التي', 'الذي', 'اللذين'),
+    Q('المعلم ........ يشرح الدرس مخلص.', 'الذي', 'التي', 'اللاتي'),
+    Q('المهندسة ........ تخطط البيوت بارعة.', 'التي', 'الذي', 'اللذان'),
+    Q('الطفل ........ يجلس في الحديقة جميل.', 'الذي', 'التي', 'اللاتي'),
+    Q('الجملة السابقة هي التي:', 'يُذكر فيها الاسم الموصول', 'تأتي بعده وتوضح معناه', 'لا تحتوي على اسم'),
+    Q('صلة الموصول هي الجملة التي:', 'تأتي بعده وتوضّح معناه', 'تسبقه', 'لا معنى لها')
+  ], { n: 8, note: 'الذي: للمفرد المذكر (العاقل وغير العاقل). التي: للمفردة المؤنثة (العاقلة وغير العاقلة) ولجمع غير العاقل. يربط الاسم الموصول بين جملتين.' });
+
+  /* ---------- الحروف المتشابهة في النطق ---------- */
+  add(S, UR, 'ar-similar', 'الحروف المتشابهة في النطق', '🔤', [
+    Q('كتبتُ بالـ ........ لم الأصفر. (الحرف الناقص)', 'ق', 'ك', 'غ'),
+    Q('الـ ........ كين حاد جدًا. (الحرف الناقص)', 'س', 'ص', 'ث'),
+    Q('الـ ........ هرة جميلة. (الحرف الناقص)', 'ز', 'ذ', 'ظ'),
+    Q('رأيتُ الـ ........ بّ في الغابة. (الحرف الناقص)', 'د', 'ض', 'ذ'),
+    Q('حصل الطالب على ........ رجة متوسطة. (الحرف الناقص)', 'د', 'ض', 'ذ'),
+    Q('اشترت منّة م ........ لمة جديدة. (الحرف الناقص)', 'ع', 'ء', 'غ'),
+    Q('أي كلمة تبدأ بحرف الطاء؟', 'طين', 'تين', 'دين'),
+    Q('أي كلمة تبدأ بحرف التاء؟', 'تين', 'طين', 'ضين'),
+    Q('عضو في جسمك ينبض:', 'قلب', 'كلب', 'قلم'),
+    Q('حيوان أليف ينبح:', 'كلب', 'قلب', 'قلم'),
+    Q('أي كلمة صحيحة؟', 'ذهب', 'دهب', 'زهب'),
+    Q('أي كلمة صحيحة؟', 'ثلج', 'سلج', 'تلج'),
+    Q('أي كلمة صحيحة؟', 'ظرف', 'ضرف', 'زرف'),
+    Q('أي كلمة صحيحة؟', 'صقر', 'سقر', 'ثقر'),
+    Q('أي كلمة صحيحة؟', 'زهرة', 'ذهرة', 'ظهرة'),
+    Q('أي كلمة صحيحة؟', 'ضرس', 'درس', 'ظرس'),
+    Q('أي كلمة تبدأ بحرف السين؟', 'سيف', 'صيف', 'ثيف'),
+    Q('أي كلمة تبدأ بحرف الصاد؟', 'صقر', 'سقر', 'ثقر'),
+    Q('أي كلمة تبدأ بحرف الذال؟', 'ذهب', 'دهب', 'زهب'),
+    Q('أي كلمة تبدأ بحرف الثاء؟', 'ثلج', 'سلج', 'تلج')
+  ], { n: 8, note: 'بعض الحروف تتشابه في نطقها ويصعب التفرقة بينها: (ت – ط) (ك – ق) (س – ص – ث) (د – ض) (ز – ذ – ظ). انطق الحرف بتركيز وانظر إلى شكله جيدًا.' });
+
+  /* ---------- القراءة: كلماتي الجميلة ---------- */
+  add(S, U1, 'ar-read-words', 'قراءة: كلماتي الجميلة', '💬', [
+    Q('ماذا قالت سلمى لليلى عن حقيبتها؟', 'حقيبتك جميلة', 'حقيبتك ثقيلة', 'حقيبتك جديدة'),
+    Q('بماذا ردّت ليلى على سلمى؟', 'شكرًا يا سلمى', 'لا أريد', 'مع السلامة'),
+    Q('ماذا سقط من يوسف في أثناء الحصّة؟', 'القلم', 'الكتاب', 'الحقيبة'),
+    Q('ماذا قالت ليلى ليوسف عندما سقط قلمه؟', 'هل تريد أن أُحضره لك؟', 'لا شأن لي بذلك', 'ابحث عنه وحدك'),
+    Q('بماذا ردّ يوسف على ليلى بعد أن أعطته القلم؟', 'شكرًا لكِ', 'لا داعي', 'إلى اللقاء'),
+    Q('كلمة جميلة نقولها لمن يساعدنا:', 'شكرًا', 'لا', 'انتظر'),
+    Q('ضد كلمة (كثيرة):', 'قليلة', 'جميلة', 'بعيدة'),
+    Q('مفرد كلمة (أصدقاء):', 'صديق', 'أصدقاء', 'صداقة'),
+    Q('جمع كلمة (زميل):', 'زملاء', 'زميلات', 'زميلان'),
+    Q('جمع كلمة (ركن):', 'أركان', 'ركنان', 'ركون'),
+    Q('مرادف كلمة (بارع):', 'ماهر', 'ضعيف', 'كسول'),
+    Q('مرادف كلمة (عُدنا):', 'رجعنا', 'ذهبنا', 'جلسنا')
+  ], { n: 8, note: 'الكلمات الجميلة مثل (شكرًا – من فضلك – آسف – صباح الخير) تجعل الناس يحبوننا ويحترموننا.' });
+
+  /* ---------- القراءة: أحب أصدقائي ---------- */
+  add(S, U1, 'ar-read-friends', 'قراءة: أُحبُّ أصدقائي', '🧑‍🤝‍🧑', [
+    Q('من الزميل الجديد الذي دخل الفصل؟', 'شريف', 'سعيد', 'يوسف'),
+    Q('أين كان شريف يجلس في الفصل؟', 'وحده في ركن الفصل', 'في أول الصف', 'بجوار المعلمة'),
+    Q('ماذا قال التلاميذ لشريف؟', 'أهلًا بك يا شريف', 'من أنت؟', 'اجلس بعيدًا'),
+    Q('في أي شيء كان شريف بارعًا؟', 'الرسم', 'الكرة', 'الغناء'),
+    Q('ماذا رسم أحمد وشريف معًا؟', 'شجرة جميلة', 'بيتًا كبيرًا', 'سيارة'),
+    Q('متى جمع أحمد أصدقاءه وذهبوا إلى شريف؟', 'وقت الفسحة', 'قبل الحصّة', 'بعد المدرسة'),
+    Q('عمّ حكى شريف؟', 'عن مدرسته القديمة وأصدقائه', 'عن الرحلة', 'عن الطعام'),
+    Q('ماذا قال أحمد لشريف في نهاية اليوم؟', 'أنا سعيد بوجودك', 'أنا متعب', 'أنا أريد الذهاب'),
+    Q('بماذا شعر شريف في نهاية اليوم؟', 'بالسعادة', 'بالحزن', 'بالغضب'),
+    Q('ماذا نفعل عندما يأتي زميل جديد إلى الفصل؟', 'نرحّب به ونتحدث معه', 'نتجاهله', 'نضحك عليه'),
+    Q('مفرد كلمة (أصدقائي):', 'صديق', 'صداقة', 'أصدقاء'),
+    Q('مرادف كلمة (رجعنا):', 'عُدنا', 'ذهبنا', 'وقفنا')
+  ], { n: 8, note: 'الصداقة الحقيقية تبدأ بكلمة طيبة وابتسامة. رحّب بالزميل الجديد وتعاون معه في اللعب والدراسة.' });
+
+  /* ---------- عادات صحية ---------- */
+  add(S, U2, 'ar-health', 'عادات صحية', '🦷', [
+    Q('كم مرة نغسل أسناننا في اليوم على الأقل؟', 'مرتين', 'مرة كل أسبوع', 'لا نغسلها'),
+    Q('ماذا نستخدم لتنظيف الأسنان؟', 'الفرشاة والمعجون', 'الحلوى', 'الصابون فقط'),
+    Q('أي هذه الأطعمة أفضل لأسناننا؟', 'الحليب والجبن', 'الحلوى الكثيرة', 'المشروبات الغازية'),
+    Q('أي هذه الوجبات صحية؟', 'الخضروات والفاكهة', 'الشيبسي كل يوم', 'الحلوى فقط'),
+    Q('نغسل أيدينا:', 'قبل الأكل وبعده', 'مرة في السنة', 'بعد النوم فقط'),
+    Q('ننام مبكرًا لكي:', 'ينمو جسمنا ونستيقظ نشيطين', 'نلعب في الليل', 'نأكل أكثر'),
+    Q('ماذا نفعل صباحًا لنبدأ يومنا بنظام؟', 'نرتّب سريرنا ونجهّز حقيبتنا', 'نترك أشياءنا في كل مكان', 'نتأخر عن المدرسة'),
+    Q('أنا أرتّب حياتي عندما:', 'أنظّم وقتي وأشيائي', 'أهمل واجباتي', 'أنام متأخرًا'),
+    Q('ضد كلمة (قويّة):', 'ضعيفة', 'جميلة', 'كبيرة'),
+    Q('جمع كلمة (سنّ):', 'أسنان', 'سنون', 'سنّات')
+  ], { n: 8, note: 'العادات الصحية: غسل الأسنان مرتين يوميًا، غسل اليدين قبل الطعام، الأكل الصحي، والنوم المبكر.' });
+})();
+
+/* ترتيب الدروس داخل المادة (وحدات ثم دروس) */
+(function () {
+  const order = ['ar-read-words', 'ar-read-friends', 'ar-muthanna', 'ar-segments', 'ar-dem-near', 'ar-health', 'ar-dem-far', 'ar-lam', 'ar-adverbs', 'ar-amr', 'ar-nahy', 'ar-relative', 'ar-similar'];
+  HA.curriculum.arabic.sort((a, b) => order.indexOf(a.id) - order.indexOf(b.id));
+})();
+
+/* ============================================================
+   التربية الدينية الإسلامية — الصف الثاني الابتدائي — الفصل الأول
+   المصدر: مذكرة مدارس جيل 2000 للغات
+   ============================================================ */
+(function () {
+  'use strict';
+  const { Q, TA } = HAH, add = HA.add, S = 'religion';
+  const A = 'العقيدة: أسماء الله الحسنى', B = 'القرآن الكريم والتفسير', C = 'العبادات', D = 'السيرة وقصص الأنبياء', E = 'القيم والأخلاق', F = 'مراجعة عامة';
+
+  add(S, A, 'rel-samee', 'الله تعالى (السميع)', '👂', [
+    Q('معنى اسم الله (السميع) هو الذي:', 'يسمع كل شيء', 'يرى كل شيء', 'يرزق الجميع'),
+    Q('عند التحدث مع الآخرين ........', 'نختار كلماتنا بعناية', 'نرفع أصواتنا', 'نقاطع كلامهم'),
+    Q('أين يسمع الله دعاءنا؟', 'في كل مكان', 'في المسجد فقط', 'في المدرسة فقط'),
+    TA('الله تعالى يسمع همساتنا ودعاءنا في السرّ.', true),
+    TA('المسلم لا يسخر من أخيه المسلم؛ لأن الله يسمعه.', true),
+    TA('الله قريب منا يسمع دعاءنا ويرى حالنا.', true),
+    TA('يسمع الله دعاءنا في المسجد والمدرسة فقط.', false)
+  ], { n: 6, note: 'الله (السميع) يسمع كل شيء: الهمس والجهر والدعاء في كل مكان. لذلك نختار كلماتنا بعناية ونحسن الحديث مع الناس.' });
+
+  add(S, A, 'rel-baseer', 'الله تعالى (البصير)', '👁️', [
+    Q('معنى اسم الله (البصير) هو الذي:', 'يرى كل شيء', 'يعاقب المشركين', 'يفتح أبواب رحمته'),
+    Q('يعلم الله تعالى:', 'ما نتكلم به وما في قلوبنا', 'ما نتكلم به فقط', 'ما نفعله أمام الناس فقط'),
+    Q('معنى الإحسان في الحديث: أن تعبد الله ........', 'كأنك تراه، فإن لم تكن تراه فإنه يراك', 'أمام الناس فقط', 'في المسجد فقط'),
+    TA('الإحسان هو أن نفعل الخير في العلن وأمام الناس فقط.', false),
+    TA('علّمنا رسول الله ﷺ أن نراقب الله في كل أفعالنا.', true),
+    TA('الإيمان بأن الله (بصير) يعطينا شعورًا بالراحة والأمان.', true),
+    TA('الله عز وجل يعلم كل ما نفكر فيه حتى لو لم نتكلم به.', true)
+  ], { n: 6, note: 'الله (البصير) يرى كل شيء ويعلم ما في القلوب. الإحسان أن تعبد الله كأنك تراه، فإن لم تكن تراه فإنه يراك.' });
+
+  add(S, A, 'rel-shakoor', 'الله تعالى (الشكور)', '🙏', [
+    Q('كثرة شكر الله (تعالى) ........ النعم', 'تزيد', 'تقلّل', 'تُذهب'),
+    Q('ما الذي يجب علينا فعله تجاه نعم الله؟', 'شكر الله عليها', 'الاعتراض عليها', 'الإسراف فيها'),
+    Q('اسم الله (الشكور) يعني أن الله يجازي على:', 'كل عمل صالح', 'الأعمال الكبيرة فقط', 'الأعمال الصغيرة فقط'),
+    Q('أي سلوك يعبّر عن شكر الله؟', 'يساعد أمه في البيت', 'يرمي الطعام على الأرض', 'لا يؤدّي واجباته المدرسية'),
+    Q('من صور شكر الله:', 'أن يتصدّق على الفقراء بجزء من مصروفه', 'أن يُسرف في الطعام', 'أن يهمل واجباته'),
+    TA('نشكر الله على النعم بالقول فقط.', false)
+  ], { n: 6, note: 'نشكر الله بالقول (الحمد لله) وبالعمل (نساعد غيرنا ونحافظ على النعمة). وكلما شكرنا الله زاد نعمه علينا.' });
+
+  add(S, B, 'rel-qadr', 'سورة القدر', '🌙', [
+    Q('نزل القرآن الكريم في شهر ........', 'رمضان', 'شعبان', 'رجب'),
+    Q('ليلة القدر ليلة عظيمة من ليالي شهر ........', 'رمضان', 'رجب', 'المحرم'),
+    Q('تتنزّل الملائكة في ليلة ........ بالرحمة والبركة.', 'القدر', 'الجمعة', 'العيد'),
+    Q('العبادة في ليلة القدر خير من عبادة ألف ........', 'شهر', 'يوم', 'أسبوع'),
+    Q('تستمر ليلة القدر حتى طلوع ........', 'الفجر', 'الظهر', 'العصر'),
+    Q('ليلة القدر ليلة مليئة بـ ........', 'السلام', 'الخوف', 'الضجيج'),
+    TA('يعلم الناس موعد ليلة القدر بالتحديد.', false)
+  ], { n: 6, note: 'ليلة القدر ليلة عظيمة في شهر رمضان، العبادة فيها خير من ألف شهر، ولا يعلم الناس موعدها، فنجتهد في العبادة في العشر الأواخر.' });
+
+  add(S, B, 'rel-bayyina', 'سورة البينة', '📖', [
+    Q('(لم يكن الذين كفروا من أهل الكتاب والمشركين ........ حتى تأتيهم البينة)', 'منفكّين', 'خائفين', 'غافلين'),
+    Q('(رسول من الله يتلو ........ مطهرة)', 'صحفًا', 'كتبًا', 'ألواحًا'),
+    Q('(فيها كتب ........)', 'قيّمة', 'كثيرة', 'صغيرة'),
+    Q('(وما تفرّق الذين أوتوا الكتاب إلا من بعد ما جاءتهم ........)', 'البيّنة', 'الرسالة', 'المعجزة'),
+    Q('عدد آيات سورة البينة:', 'ثماني آيات', 'ست آيات', 'عشر آيات')
+  ], { n: 5, note: 'سورة البينة تتحدث عن الرسول الذي جاء بالحق من عند الله يتلو صحفًا مطهرة فيها كتب قيّمة.' });
+
+  add(S, B, 'rel-alaq', 'سورة العلق', '✍️', [
+    Q('(اقرأ باسم ربك ........ خلق)', 'الذي', 'التي', 'الذين'),
+    Q('(خلق الإنسان من ........)', 'علق', 'طين', 'ماء'),
+    Q('(اقرأ وربك ........)', 'الأكرم', 'الأعلى', 'الأعظم'),
+    Q('(الذي علّم ........)', 'بالقلم', 'بالكتاب', 'بالمعلم'),
+    Q('(علّم الإنسان ما لم ........)', 'يعلم', 'يفهم', 'يقرأ'),
+    Q('(كلا إن الإنسان ........)', 'ليطغى', 'ليسعى', 'ليتعلم'),
+    Q('أول ما نزل على النبي ﷺ من القرآن سورة ........', 'العلق', 'الإخلاص', 'الفاتحة')
+  ], { n: 6, note: 'أول ما نزل من القرآن الكريم على النبي ﷺ أول آيات سورة العلق، وأول كلمة فيها: (اقرأ).' });
+
+  add(S, B, 'rel-sharh', 'سورة الشرح', '💖', [
+    Q('عدد آيات سورة الشرح:', 'ثماني آيات', 'ست آيات', 'سبع آيات'),
+    Q('معنى قوله تعالى (وضعنا عنك وزرك):', 'خفّفنا عنك الأحمال', 'جعلناك رسولًا', 'أغنيناك بالمال'),
+    Q('ذكر الله اليُسر في سورة الشرح:', 'مرتين', 'مرة واحدة', 'ثلاث مرات'),
+    Q('الصبر هو ........', 'تحمّل الصعوبات وعدم الشكوى', 'الشكر', 'التفاؤل'),
+    TA('الله يحب عباده المؤمنين ويخفف آلامهم.', true),
+    TA('أزال الله (تعالى) عن النبي ﷺ حِمله الثقيل.', true),
+    TA('العسر يستمر ولا ينتهي.', false)
+  ], { n: 6, note: 'سورة الشرح تخبرنا أن الله مع نبيه ﷺ وأن مع العسر يسرًا. فنصبر ونثق أن الفرج قريب.' });
+
+  add(S, B, 'rel-duha', 'سورة الضحى', '🌅', [
+    Q('(والضحى، والليل إذا ........)', 'سجى', 'مضى', 'جرى'),
+    Q('(ما ودّعك ربك وما ........)', 'قلى', 'سعى', 'هدى'),
+    Q('(وللآخرة خير لك من ........)', 'الأولى', 'الأخرى', 'الدنيا'),
+    Q('(ولسوف يعطيك ربك ........)', 'فترضى', 'فتغنى', 'فتنجو'),
+    Q('(ألم يجدك ........ فآوى)', 'يتيمًا', 'فقيرًا', 'ضعيفًا')
+  ], { n: 5, note: 'سورة الضحى تطمئن النبي ﷺ أن الله لم يتركه ولم يكرهه، وأن الآخرة خير له من الدنيا.' });
+
+  add(S, B, 'rel-teen', 'سورة التين (معاني وتفسير)', '🫒', [
+    Q('كرّم الله (تعالى) الإنسان على سائر ........', 'المخلوقات', 'الأنبياء', 'الملائكة'),
+    Q('أنعم الله علينا بـ ........ لا تُحصى.', 'نعم', 'أموال', 'جبال'),
+    Q('الله تعالى ........ لا يظلم أحدًا.', 'عادل', 'ظالم', 'غافل'),
+    Q('الكفر والعصيان يهبطان بالإنسان إلى ........ مكان.', 'أسوأ', 'أجمل', 'أعلى'),
+    TA('خلق الله عز وجل الإنسان في أجمل صورة.', true),
+    TA('المؤمنون ينالون جزاءً عظيمًا في الآخرة.', true),
+    TA('الكافر ينال مكافأة في الآخرة.', false)
+  ], { n: 6, note: 'خلق الله الإنسان في أحسن صورة وكرّمه، والمؤمن الذي يعمل الصالحات له أجر عظيم عند الله.' });
+
+  add(S, C, 'rel-adhan', 'الأذان', '📢', [
+    Q('نذهب إلى الصلاة بعد سماع ........', 'الأذان', 'القرآن', 'الأذكار'),
+    Q('يسمّى من ينادي للصلاة ........', 'المؤذّن', 'الإمام', 'الخطيب'),
+    Q('يُنادى للصلاة في اليوم ........', 'خمس مرات', 'مرة واحدة', 'ثلاث مرات'),
+    TA('الأذان تذكير للمسلمين بوقت الصلاة.', true),
+    TA('يُؤذَّن لكل صلاة مرتين في اليوم.', false),
+    TA('يُستحب للمسلم أن يردّد الأذان مع المؤذّن.', true),
+    TA('يكون الأذان بعد الانتهاء من الصلاة.', false)
+  ], { n: 6, note: 'الأذان إعلام بدخول وقت الصلاة، يُنادى به خمس مرات في اليوم، ونردّد كلماته مع المؤذّن.' });
+
+  add(S, C, 'rel-iqama', 'الإقامة', '🕋', [
+    Q('إقامة الصلاة تكون ........', 'بعد الأذان وقبل الصلاة', 'قبل الأذان', 'بعد الصلاة'),
+    Q('عبارة (قد قامت الصلاة) نقولها في ........', 'الإقامة', 'الأذان', 'الأذان والإقامة'),
+    Q('كلمات الإقامة ........', 'أقل من كلمات الأذان', 'أكثر من كلمات الأذان', 'مساوية لكلمات الأذان'),
+    TA('من السنة أن نقيم الصلاة بصوت واضح وجميل.', true),
+    TA('لا يوجد فرق بين الأذان والإقامة.', false),
+    TA('الهدف من الإقامة إعلان قرب بدء الصلاة.', true)
+  ], { n: 6, note: 'الإقامة تكون بعد الأذان وقبل الصلاة مباشرة، وفيها عبارة (قد قامت الصلاة)، وكلماتها أقل من كلمات الأذان.' });
+
+  add(S, C, 'rel-jamaa', 'صلاة الجماعة', '🧎', [
+    Q('قال رسول الله ﷺ: صلاة ........ تفضل صلاة الفذّ بسبع وعشرين درجة.', 'الجماعة', 'الفرد', 'الجمعة'),
+    Q('التكبير والركوع والسجود من أعمال ........', 'الصلاة', 'الصيام', 'الحج'),
+    Q('تكون صلاة الجماعة باثنين ........', 'أو أكثر', 'فقط', 'أو أقل'),
+    Q('يتّبع المصلّون ........ في كل ما يفعله.', 'الإمام', 'المؤذّن', 'أي شخص'),
+    Q('يصلّي المسلم جماعةً في أي مكان ........', 'طاهر', 'بعيد', 'مزدحم'),
+    TA('صلاة الجماعة أفضل من صلاة الفرد.', true),
+    TA('لا تُصلّى الجماعة إلا في المسجد فقط.', false)
+  ], { n: 6, note: 'صلاة الجماعة تفضل صلاة الفرد بسبع وعشرين درجة، وتكون باثنين أو أكثر، ويتبع المصلّون الإمام.' });
+
+  add(S, D, 'rel-wahy', 'نزول الوحي على النبي ﷺ', '🏔️', [
+    TA('أمر جبريل عليه السلام النبي ﷺ بالقراءة.', true),
+    TA('أول ما نزل على النبي ﷺ (قل هو الله أحد).', false),
+    TA('كانت السيدة خديجة أول من آمن بالنبي ﷺ من النساء.', true),
+    Q('لماذا كان النبي ﷺ يذهب إلى غار حراء؟', 'ليتعبّد ويتأمّل', 'ليلعب', 'لينام'),
+    Q('من الذي أخبر النبي ﷺ أنه نبي هذه الأمة؟', 'جبريل عليه السلام', 'أبو بكر', 'خديجة'),
+    Q('نزل الوحي على النبي ﷺ في غار ........', 'حراء', 'ثور', 'أحد')
+  ], { n: 6, note: 'نزل جبريل عليه السلام على النبي ﷺ في غار حراء وقال له: (اقرأ). وكانت السيدة خديجة أول من آمن به من النساء.' });
+
+  add(S, D, 'rel-secret', 'بداية الدعوة (الدعوة السرية)', '🤫', [
+    Q('السيدة خديجة أول من آمن بالنبي ﷺ من ........', 'النساء', 'الرجال', 'الموالي'),
+    Q('نزل الوحي على النبي ﷺ في غار ........', 'حراء', 'ثور', 'أحد'),
+    Q('أبو بكر الصديق أول من آمن بالنبي ﷺ من ........', 'الرجال', 'النساء', 'الموالي'),
+    Q('أول ........ إيمانًا زيد بن حارثة.', 'الموالي', 'الرجال', 'النساء'),
+    Q('من أول من آمن بالنبي ﷺ من الأطفال؟', 'علي بن أبي طالب', 'أبو بكر', 'زيد بن حارثة'),
+    Q('من أول من دعاهم النبي ﷺ إلى الإسلام؟', 'أهله وأصدقاؤه المقرّبون', 'كفار قريش', 'أهل الطائف')
+  ], { n: 6, note: 'بدأ النبي ﷺ الدعوة سرًّا مع أهله وأصدقائه. وأول من آمن: خديجة (من النساء)، وأبو بكر (من الرجال)، وعلي (من الأطفال)، وزيد بن حارثة (من الموالي).' });
+
+  add(S, D, 'rel-open', 'الدعوة الجهرية', '📣', [
+    Q('ظل النبي ﷺ يدعو الناس إلى الإسلام ........ لمدة ثلاث سنوات.', 'سرًّا', 'جهرًا', 'ليلًا'),
+    Q('أمر الله النبي بالجهر بالدعوة، فصعد على جبل ........ يدعو الناس.', 'الصفا', 'أحد', 'ثور'),
+    Q('كذّب بعض زعماء قريش النبي ﷺ ومنهم ........', 'أبو لهب', 'أبو بكر', 'زيد'),
+    Q('أنزل الله سورة ........ ردًّا على إساءة أبي لهب للنبي.', 'المسد', 'الفيل', 'الشرح'),
+    Q('أخذ كفار قريش يعذّبون ........ ليردّوهم عن دينهم.', 'المسلمين', 'التجار', 'الأطفال'),
+    TA('كان رسول الله ﷺ معروفًا بالصدق والأمانة بين الناس.', true),
+    TA('آمن أهل مكة جميعًا استجابةً لدعوة النبي ﷺ.', false),
+    TA('صعد النبي ﷺ جبل الصفا ليؤذّن للصلاة.', false)
+  ], { n: 6, note: 'بعد ثلاث سنوات من الدعوة السرية أمر الله نبيه بالجهر بالدعوة، فصعد على جبل الصفا ودعا قريشًا إلى الإسلام.' });
+
+  add(S, D, 'rel-shuaib', 'نبي الله شعيب عليه السلام', '⚖️', [
+    Q('طلب شعيب عليه السلام من قومه أن ........', 'يكونوا أمناء صادقين', 'يغادروا قريتهم', 'يتركوا التجارة'),
+    Q('العقاب الذي أنزله الله على قوم مدين كان ........', 'زلزالًا', 'مطرًا', 'فيضانًا'),
+    Q('من أفعال قوم مدين السيئة ........', 'الغشّ', 'الجبن', 'التشاؤم'),
+    Q('كان قوم شعيب يغشّون في ........', 'الميزان', 'الطعام', 'اللعب'),
+    Q('أين كان شعيب عليه السلام وقومه يعيشون؟', 'في مدين', 'في مصر', 'في مكة')
+  ], { n: 5, note: 'دعا شعيب عليه السلام قومه إلى عبادة الله وإلى الأمانة والصدق في الميزان والتجارة، فلم يستجب المكذّبون فأهلكهم الله.' });
+
+  add(S, D, 'rel-musa', 'نبي الله موسى عليه السلام', '🌊', [
+    TA('خرج موسى عليه السلام إلى أرض العراق.', false),
+    TA('لم ينجح موسى في الخروج بقومه من مصر.', false),
+    TA('نتعلم من قصة موسى أن النصر يأتي بالصبر والتوكل على الله.', true),
+    TA('كانت أخت موسى تراقب الصندوق من بعيد.', true),
+    Q('أوحى الله إلى أم موسى أن تضعه في صندوق وتلقيه في ........', 'النهر', 'الصحراء', 'الحقل'),
+    Q('تلقّى موسى عليه السلام الوحي في ........', 'سيناء', 'مكة', 'مدين'),
+    Q('من التي رأت موسى وقرّرت أن تربّيه كابن لها؟', 'زوجة فرعون', 'أخت موسى', 'خادمة فرعون'),
+    Q('أهلك الله فرعون وجنده بـ ........', 'الغرق', 'الحريق', 'الجوع')
+  ], { n: 6, note: 'ألقت أم موسى ابنها في النهر بأمر الله، فربّته زوجة فرعون. ثم أخرج موسى قومه من مصر، وأغرق الله فرعون وجنده.' });
+
+  add(S, D, 'rel-dawud', 'نبي الله داود عليه السلام', '🪨', [
+    TA('كان داود عليه السلام مشهورًا بصوته العذب.', true),
+    TA('الثقة بالله وقوة الإيمان من أسباب النصر.', true),
+    TA('شعر داود عليه السلام بالخوف عند رؤية العملاق جالوت.', false),
+    TA('اتصف داود عليه السلام بالشجاعة وقوة الإيمان.', true),
+    Q('كان عمل داود عليه السلام ........ قبل أن يصبح نبيًّا.', 'رعي الأغنام', 'التجارة', 'الحدادة'),
+    Q('أنزل الله على داود عليه السلام كتابًا اسمه ........', 'الزبور', 'التوراة', 'الإنجيل'),
+    Q('كان سلاح داود عليه السلام في الحرب ........ وحجرًا.', 'مقلاعًا', 'سيفًا', 'رمحًا'),
+    Q('انتصر داود عليه السلام على ........', 'جالوت', 'فرعون', 'قارون')
+  ], { n: 6, note: 'كان داود عليه السلام شجاعًا قوي الإيمان، هزم العملاق جالوت بمقلاعه وحجر، ثم صار ملكًا نبيًّا وأنزل الله عليه الزبور.' });
+
+  add(S, E, 'rel-tawakkul', 'التوكل على الله (تعالى)', '🤲', [
+    Q('التوكل يعني أن يُتقن المسلم عمله ثم ........ على الله في النتيجة.', 'يعتمد', 'يتواكل', 'يشكّ'),
+    Q('المتوكّل على الله يوفقه الله ويعطيه ........ في الآخرة.', 'الثواب', 'التواكل', 'الكسل'),
+    Q('الاعتماد على الله بدون عمل يُسمّى ........', 'تواكلًا', 'توكّلًا', 'اجتهادًا'),
+    Q('أمرنا الله تعالى بالاجتهاد و........', 'العمل', 'التواكل', 'الكسل'),
+    TA('التواكل هو أن نبذل جهدًا ثم نترك النتيجة لله.', false),
+    TA('الطالب الذي لا يذاكر ثم يعتمد على الله في النتيجة يُعتبر متوكّلًا على الله.', false),
+    TA('التوكل على الله سبب في النجاح والتوفيق في الدنيا والآخرة.', true)
+  ], { n: 6, note: 'التوكل: أن نأخذ بالأسباب ونعمل بجدّ ثم نعتمد على الله. أما التواكل فهو الاعتماد على الله بدون عمل، وهو غير مقبول.' });
+
+  add(S, E, 'rel-amana', 'الأمانة في الحفاظ على الجسم والعقل', '💪', [
+    TA('فضّل الله عز وجل الإنسان على الحيوان بقوة الجسم.', false),
+    TA('بالعقل يفرّق الإنسان بين الخير والشر.', true),
+    TA('السهر إلى وقت متأخر من الأمور التي تفيد صحة الإنسان.', false),
+    TA('التلميذ الأمين قد يهمل مذاكرة دروسه.', false),
+    Q('أي هذه الأفعال تحافظ على الجسم والعقل؟', 'الرياضة', 'السهر لساعات طويلة', 'مشاهدة التلفاز لأوقات طويلة'),
+    Q('أي هذه الأفعال تحافظ على الجسم والعقل؟', 'القراءة', 'السهر لساعات طويلة', 'إهمال النوم'),
+    Q('أداء الصلاة في وقتها:', 'يحافظ على الجسم والعقل', 'يضر بالجسم', 'لا علاقة له بالجسم')
+  ], { n: 6, note: 'الجسم والعقل أمانة عندنا: نحافظ عليهما بالصلاة والرياضة والقراءة والنوم المبكر، ونبتعد عن السهر ومشاهدة التلفاز طويلًا.' });
+
+  add(S, E, 'rel-sarra', 'في السرّاء والضرّاء', '🤝', [
+    Q('قال رسول الله ﷺ: مثل المؤمنين في توادّهم وتراحمهم و........ مثل الجسد.', 'تعاطفهم', 'سهرهم', 'غضبهم'),
+    Q('مثل المؤمنين في توادّهم وتراحمهم وتعاطفهم مثل ........ إذا اشتكى منه عضو تداعى له سائر الجسد.', 'الجسد', 'البيت', 'الشجرة'),
+    Q('شاركتُ زميلي في طعامي لأنه نسي طعامه في المنزل. هذا تصرّف:', 'صحيح', 'خاطئ', 'غير مهم'),
+    Q('حصل زميل على بطولة رياضية. ماذا نفعل؟', 'نهنّئه', 'نغضب منه', 'نتجاهله'),
+    Q('مرض صديقك. ما التصرف الصحيح؟', 'زيارته والاطمئنان عليه', 'نسيانه', 'السخرية منه'),
+    Q('تعثّر زميلك في الطريق. ماذا نفعل؟', 'نساعده', 'نتركه ونذهب', 'نضحك عليه'),
+    Q('السرّاء تعني وقت ........', 'الفرح والسرور', 'الحزن', 'المرض'),
+    Q('الضرّاء تعني وقت ........', 'الشدة والحزن', 'السرور', 'النوم'),
+    TA('يحرص المسلم على ستر أخيه المسلم.', true)
+  ], { n: 6, note: 'المؤمنون كالجسد الواحد: يفرحون لفرح أخيهم ويحزنون لحزنه، ويقفون معه في السرّاء والضرّاء.' });
+
+  add(S, F, 'rel-review', 'مراجعة عامة على الفصل الدراسي الأول', '🏆', [
+    TA('ليلة القدر ليلة مليئة بالسلام.', true),
+    TA('صلاة الجماعة أفضل من صلاة الفرد.', true),
+    TA('بالعقل يفرّق الإنسان بين الخير والشر.', true),
+    TA('لا تُصلّى الجماعة إلا في المسجد فقط.', false),
+    TA('العسر يستمر ولا ينتهي.', false),
+    TA('الإيمان والعمل الصالح يرفعان شأن الإنسان يوم القيامة.', true),
+    TA('الله عز وجل هو البصير الذي يرى كل شيء.', true),
+    TA('الضرّاء تعني وقت السرور.', false),
+    TA('يحرص المسلم على ستر أخيه المسلم.', true),
+    Q('تستمر ليلة القدر حتى طلوع ........', 'الفجر', 'الظهر', 'العصر'),
+    Q('من صفات النبي محمد ﷺ ........ الرحم.', 'صلة', 'قطع', 'نسيان'),
+    Q('أهلك الله فرعون وجنده بـ ........', 'الغرق', 'الحريق', 'الجوع'),
+    Q('كان قوم شعيب يغشّون في ........', 'الميزان', 'الطعام', 'اللعب'),
+    Q('على من انتصر داود عليه السلام؟', 'جالوت', 'فرعون', 'قارون'),
+    Q('من أول من آمن بالنبي ﷺ من الرجال؟', 'أبو بكر الصديق', 'علي بن أبي طالب', 'زيد بن حارثة'),
+    Q('ماذا نفعل عندما نسمع الأذان؟', 'نستعد للصلاة ونردّد مع المؤذّن', 'نكمل اللعب', 'نرفع أصواتنا'),
+    Q('لماذا صعد النبي ﷺ جبل الصفا؟', 'ليدعو الناس إلى الإسلام جهرًا', 'ليلعب', 'ليؤذّن للصلاة')
+  ], { n: 10, note: 'راجع ما تعلّمته في هذا الفصل: أسماء الله الحسنى، ليلة القدر، صلاة الجماعة، قصص الأنبياء، والتوكل والأمانة.' });
+})();
+
+/* ============================================================
+   الرياضيات (كتاب الوزارة) + Math (مذكرة المدرسة بالإنجليزية)
+   كل الدروس الحسابية مولِّدة: أرقام جديدة في كل محاولة.
+   ============================================================ */
+(function () {
+  'use strict';
+  const { Q, H, mk, ri, pickN, shuffle, rand, numQ, opts, M, numWords } = HAH, add = HA.add;
+
+  /* ======================= الرياضيات بالعربي ======================= */
+  const S = 'math';
+  const c1 = 'الفصل ١: الرسوم البيانية والجداول', c2 = 'الفصل ٢: الجمع الرأسي', c3 = 'الفصل ٣: الطرح الرأسي', c4 = 'الفصل ٤: الوقت والمدة الزمنية', c5 = 'الفصل ٥: وحدات الطول',
+    c6 = 'الفصل ٦: أعداد أكبر من ١٠٠', c7 = 'الفصل ٧: وحدات السعة', c8 = 'الفصل ٨: الجمع والطرح الرأسي', c9 = 'الفصل ٩: طرق الحساب الذهني';
+
+  add(S, c1, 'm-graph', 'قراءة الرسوم البيانية', '📊', M.graph('ar'), { n: 6, note: 'الرسم البياني يعرض البيانات بالصور. عدّ الصور في كل صف لمعرفة عدد كل صنف، والصف الأكثر صورًا هو الأكبر عددًا.' });
+
+  add(S, c2, 'm-addv1', 'الجمع الرأسي (بدون تجميع)', '➕', M.addV('ar', 11, 88, 'noreg'), { n: 6, note: 'اكتب العددين رأسيًا: الآحاد تحت الآحاد والعشرات تحت العشرات، ثم اجمع الآحاد أولًا ثم العشرات.' });
+  add(S, c2, 'm-addv2', 'الجمع الرأسي (مع التجميع)', '➕', M.addV('ar', 15, 89, 'reg'), { n: 6, note: 'إذا زاد مجموع الآحاد على ٩ نكتب رقم الآحاد ونحمل (١) عشرة إلى خانة العشرات ثم نجمع العشرات.' });
+  add(S, c3, 'm-subv1', 'الطرح الرأسي (بدون فك)', '➖', M.subV('ar', 21, 99, 'noreg'), { n: 6, note: 'اطرح الآحاد أولًا ثم العشرات. العدد الأكبر يُكتب في الأعلى دائمًا.' });
+  add(S, c3, 'm-subv2', 'الطرح الرأسي (مع الفك)', '➖', M.subV('ar', 21, 99, 'reg'), { n: 6, note: 'إذا كانت الآحاد في العدد العلوي أصغر نفكّ عشرة من العشرات فتصبح الآحاد ١٠ + الآحاد، ثم نطرح.' });
+
+  const HRS = ['الواحدة', 'الثانية', 'الثالثة', 'الرابعة', 'الخامسة', 'السادسة', 'السابعة', 'الثامنة', 'التاسعة', 'العاشرة', 'الحادية عشرة', 'الثانية عشرة'];
+  add(S, c4, 'm-time', 'الساعة والمدة الزمنية', '⏰', () => {
+    const out = mk(10, () => {
+      const h = ri(1, 12), half = Math.random() < .5, t = '{{' + h + ':' + (half ? '30' : '00') + '}}';
+      return opts('الساعة ' + t + ' تُقرأ:', 'الساعة ' + HRS[h - 1] + (half ? ' والنصف' : ' تمامًا'), ['الساعة ' + HRS[h - 1] + (half ? ' تمامًا' : ' والنصف'), 'الساعة ' + HRS[h % 12] + (half ? ' والنصف' : ' تمامًا')]);
+    });
+    const dur = mk(6, () => { const h = ri(1, 8), d = ri(1, 4); return numQ('بدأ الدرس في الساعة {{' + h + ':00}} وانتهى في الساعة {{' + (h + d) + ':00}}. كم ساعة استمر الدرس؟', d); });
+    const after = mk(4, () => { const h = ri(1, 8), d = ri(1, 3); return opts('بعد ' + (d === 1 ? 'ساعة' : d === 2 ? 'ساعتين' : '٣ ساعات') + ' من الساعة {{' + h + ':00}} تكون الساعة:', '{{' + (h + d) + ':00}}', ['{{' + (h + d + 1) + ':00}}', '{{' + (h + d - 1) + ':00}}', '{{' + (h + d + 2) + ':00}}']); });
+    return out.concat(dur, after, [
+      Q('الساعة الواحدة = ........ دقيقة', '60', '30', '100'),
+      Q('اليوم = ........ ساعة', '24', '12', '60'),
+      Q('الأسبوع = ........ أيام', '7', '5', '10'),
+      Q('السنة = ........ شهرًا', '12', '10', '7'),
+      Q('نصف الساعة = ........ دقيقة', '30', '15', '60')
+    ]);
+  }, { n: 8, note: 'الساعة = ٦٠ دقيقة، ونصف الساعة = ٣٠ دقيقة. لحساب المدة الزمنية نطرح وقت البداية من وقت النهاية.' });
+
+  add(S, c5, 'm-length', 'وحدات الطول (سم – م)', '📏', () => mk(8, () => { const n = ri(2, 9); return opts(n + ' متر = ........ سنتيمتر', n * 100, [n * 10, n * 1000, n + 100]); }).concat([
+    Q('1 متر = ........ سنتيمتر', '100', '10', '1000'),
+    Q('أنسب وحدة لقياس طول القلم:', 'السنتيمتر', 'المتر', 'اللتر'),
+    Q('أنسب وحدة لقياس طول الفصل:', 'المتر', 'السنتيمتر', 'اللتر'),
+    Q('أنسب وحدة لقياس طول الباب:', 'المتر', 'السنتيمتر', 'الكيلوجرام'),
+    Q('أنسب وحدة لقياس طول النملة:', 'السنتيمتر', 'المتر', 'اللتر'),
+    Q('أنسب وحدة لقياس طول السبورة:', 'المتر', 'السنتيمتر', 'الدقيقة'),
+    Q('أيهما أطول؟', '2 متر', '50 سنتيمترًا', 'الاثنان متساويان'),
+    Q('أيهما أقصر؟', '30 سنتيمترًا', '1 متر', 'الاثنان متساويان'),
+    Q('عند القياس بالمسطرة نبدأ من:', 'الصفر', 'الرقم 1', 'الرقم 10')
+  ]), { n: 8, note: '١ متر = ١٠٠ سنتيمتر. نقيس الأشياء الصغيرة (القلم) بالسنتيمتر، والأشياء الكبيرة (الفصل) بالمتر، ونبدأ القياس من الصفر.' });
+
+  add(S, c6, 'm-place', 'القيمة المكانية (المئات والعشرات والآحاد)', '🏠', M.place('ar'), { n: 6, note: 'في العدد ٤٥٦: الرقم ٤ منزلته المئات وقيمته ٤٠٠، والرقم ٥ منزلته العشرات وقيمته ٥٠، والرقم ٦ منزلته الآحاد وقيمته ٦.' });
+  add(S, c6, 'm-expanded', 'الصورة القياسية والصورة الممتدة', '🧩', M.expanded('ar'), { n: 6, note: 'الصورة القياسية: ٤٣٥. الصورة الممتدة: ٤٠٠ + ٣٠ + ٥. أصغر عدد من ثلاثة أرقام هو ١٠٠ وأكبر عدد هو ٩٩٩.' });
+  add(S, c6, 'm-compare', 'مقارنة الأعداد', '⚖️', M.compare('ar'), { n: 6, note: 'قارن من اليسار: العدد الذي له أكبر منزلة أكبر هو الأكبر. العدد المكوّن من ٣ أرقام أكبر من أي عدد مكوّن من رقمين.' });
+  add(S, c6, 'm-order', 'ترتيب الأعداد', '🔢', M.order('ar'), { n: 6, note: 'الترتيب التصاعدي: من الأصغر إلى الأكبر. الترتيب التنازلي: من الأكبر إلى الأصغر.' });
+  add(S, c6, 'm-skip', 'العدّ بالقفز (٢، ١٠، ١٠٠)', '🦘', M.skip('ar', [2, 10, 100]), { n: 6, note: 'العدّ بـ ١٠: ١٠ ، ٢٠ ، ٣٠ ... والعدّ بـ ١٠٠: ١٠٠ ، ٢٠٠ ، ٣٠٠ ... انتبه لمقدار القفزة!' });
+
+  add(S, c7, 'm-cap', 'وحدات السعة (اللتر)', '🥛', () => mk(8, () => {
+    const a = ri(3, 9), b = ri(3, 9), k = ri(0, 1), hi = Math.max(a, b) + 1, lo = Math.min(a, b);
+    return k === 0 ? numQ('اشترت أمي ' + a + ' لترات عصير و' + b + ' لترات لبن. كم لترًا اشترت؟', a + b) : numQ('في الخزان ' + hi + ' لترات ماء، استُخدم منها ' + lo + ' لترات. كم لترًا بقي؟', hi - lo);
+  }).concat([
+    Q('وحدة قياس سعة السوائل:', 'اللتر', 'المتر', 'الدقيقة'),
+    Q('أي وعاء يتسع لماء أكثر؟', 'الجردل (الدلو)', 'الكوب', 'الملعقة'),
+    Q('أي وعاء يتسع لماء أقل؟', 'الملعقة', 'الزجاجة الكبيرة', 'الجردل'),
+    Q('نقيس كمية اللبن في الإناء بوحدة:', 'اللتر', 'السنتيمتر', 'الساعة'),
+    Q('أنسب وحدة لقياس ماء حوض السمك:', 'اللتر', 'السنتيمتر', 'الدقيقة')
+  ]), { n: 7, note: 'السعة هي كمية السائل التي يتسع لها الإناء، ووحدتها اللتر. نجمع اللترات أو نطرحها كما نجمع الأعداد.' });
+
+  add(S, c8, 'm-add3', 'الجمع الرأسي (أعداد أكبر)', '➕', M.addV('ar', 120, 480, 'any'), { n: 6, note: 'نجمع من اليمين: الآحاد ثم العشرات ثم المئات، ولا ننسَ العدد المحمول.' });
+  add(S, c8, 'm-sub3', 'الطرح الرأسي (أعداد أكبر)', '➖', M.subV('ar', 200, 900, 'any'), { n: 6, note: 'نطرح من اليمين: الآحاد ثم العشرات ثم المئات، وإذا لزم الأمر نفكّ عشرة أو مئة.' });
+  add(S, c8, 'm-story', 'مسائل لفظية', '📖', M.story('ar'), { n: 6, note: 'اقرأ المسألة جيدًا: هل نجمع (نضيف) أم نطرح (نأخذ)؟ كلمة (بقي) تعني طرحًا، وكلمة (كم في المجموع) تعني جمعًا.' });
+
+  add(S, c9, 'm-doubles', 'الحساب الذهني: التوائم', '👯', M.doubles('ar'), { n: 6, note: 'التوائم: عددان متساويان مثل ٧ + ٧ = ١٤. وشبه التوائم مثل ٧ + ٨: اجمع ٧ + ٧ ثم زِد ١.' });
+  add(S, c9, 'm-maketen', 'الحساب الذهني: تكوين العشرة', '🔟', M.makeTen('ar'), { n: 6, note: 'لجمع ٨ + ٥: كوّن ١٠ أولًا (٨ + ٢) ثم أضف الباقي (٣) فيكون الناتج ١٣.' });
+  add(S, c9, 'm-tenmore', 'الحساب الذهني: الجمع والطرح بـ ١٠', '🧮', M.tenMore('ar'), { n: 6, note: 'عند جمع ١٠ يزيد رقم العشرات ١، وعند طرح ١٠ ينقص رقم العشرات ١ ويبقى رقم الآحاد كما هو.' });
+  add(S, c9, 'm-missing', 'الحساب الذهني: العدد المجهول', '❓', M.missing('ar'), { n: 6, note: 'لإيجاد العدد المجهول في ٧ + ▢ = ١٥ اطرح: ١٥ − ٧ = ٨.' });
+
+  /* ======================= Math (English) ======================= */
+  const E = 'mathEn';
+  const u1 = 'Unit 1: Data & Graphs', u2 = 'Unit 2: Mental Math Strategies', u3 = 'Unit 3: 3-Digit Numbers', u4 = 'Unit 4: Add & Subtract 2-Digit Numbers', u5 = 'Unit 5: Shapes & Measurement';
+
+  add(E, u1, 'me-graph', 'Collecting & Representing Data', '📊', M.graph('en'), { n: 6, note: 'A pictograph uses pictures to tell how many. Data is another word for information.' });
+
+  add(E, u2, 'me-doubles', 'Adding Doubles', '👯', M.doubles('en'), { n: 6, note: 'Doubles: two equal numbers, like 4 + 4 = 8. Near doubles: 6 + 7 is double 6 plus 1.' });
+  add(E, u2, 'me-count', 'Counting On & Counting Back', '🖐️', M.simple('en', 'mix', 2, 12), { n: 6, note: 'To add, put the bigger number in your mind and count on. To subtract, count back.' });
+  add(E, u2, 'me-tenmore', 'Add & Subtract 10 (120 chart)', '🔟', M.tenMore('en'), { n: 6, note: 'Adding 10 moves one row down on the 120 chart. Subtracting 10 moves one row up.' });
+  add(E, u2, 'me-maketen', 'Making Ten', '🎯', M.makeTen('en'), { n: 6, note: 'To solve 8 + 5: make ten first (8 + 2 = 10), then add the rest (10 + 3 = 13).' });
+  add(E, u2, 'me-missing', 'Missing Addend & Subtrahend', '❓', M.missing('en'), { n: 6, note: 'To find the missing number in 7 + ? = 15, subtract: 15 − 7 = 8.' });
+  add(E, u2, 'me-story', 'Story Problems', '📖', M.story('en'), { n: 6, note: 'Read carefully. “Left” means subtract. “In all” or “altogether” means add.' });
+  add(E, u2, 'me-skip', 'Skip Counting (2s, 10s, 100s)', '🦘', M.skip('en', [2, 10, 100]), { n: 6, note: 'Skip count by 10s: 10, 20, 30… By 100s: 100, 200, 300… By 2s: 2, 4, 6…' });
+
+  add(E, u3, 'me-place', 'Place Value (Hundreds, Tens, Ones)', '🏠', M.place('en'), { n: 6, note: 'In 746: the digit 7 is in the hundreds place (value 700), 4 is in the tens place (value 40), and 6 is in the ones place (value 6).' });
+  add(E, u3, 'me-expanded', 'Standard & Expanded Form', '🧩', M.expanded('en'), { n: 6, note: 'Standard form: 435. Expanded form: 400 + 30 + 5. The smallest 3-digit number is 100 and the greatest is 999.' });
+  add(E, u3, 'me-words', 'Word Form of Numbers', '🔤', M.words(), { n: 6, note: 'Example: 485 = four hundred and eighty five. 900 = nine hundred.' });
+  add(E, u3, 'me-compare', 'Comparing Numbers (>, <, =)', '⚖️', M.compare('en'), { n: 6, note: 'The number with the greatest place value is the biggest. A 3-digit number is always bigger than a 2-digit number.' });
+  add(E, u3, 'me-order', 'Ordering Numbers', '🔢', M.order('en'), { n: 6, note: 'Ascending = from least to greatest. Descending = from greatest to least.' });
+
+  add(E, u4, 'me-add2', 'Adding 2-Digit Numbers', '➕', () => M.addV('en', 11, 88, 'noreg')().concat(M.addV('en', 15, 89, 'reg')()), { n: 6, note: 'Add the ones first, then the tens. If the ones make more than 9, regroup: 10 ones = 1 ten.' });
+  add(E, u4, 'me-sub2', 'Subtracting 2-Digit Numbers', '➖', () => M.subV('en', 21, 99, 'noreg')().concat(M.subV('en', 31, 99, 'reg')()), { n: 6, note: 'Subtract the ones first, then the tens. Decompose each number into tens and ones to help you.' });
+  add(E, u4, 'me-estimate', 'Estimation', '🎲', M.estimate(), { n: 6, note: 'To estimate, keep the tens digit and write 0 in the ones place: 58 → 50. Then add or subtract the estimates.' });
+
+  add(E, u5, 'me-2d', '2D Shapes & Their Properties', '🔷', [
+    Q('How many sides does a triangle have?', '3', '4', '5'),
+    Q('How many sides does a square have?', '4', '3', '5'),
+    Q('How many sides does a pentagon have?', '5', '6', '4'),
+    Q('How many sides does a hexagon have?', '6', '5', '8'),
+    Q('How many sides and vertices does a circle have?', '0', '1', '4'),
+    Q('How many vertices does a rectangle have?', '4', '3', '2'),
+    Q('Which shape has 4 equal sides?', 'Square', 'Rectangle', 'Triangle'),
+    Q('Which shape has 2 long sides and 2 short sides?', 'Rectangle', 'Square', 'Circle'),
+    Q('A quadrilateral is a shape with ........', '4 sides and 4 vertices', '3 sides and 3 vertices', '5 sides and 5 vertices'),
+    Q('Which shape is NOT a quadrilateral?', 'Triangle', 'Square', 'Rhombus'),
+    Q('Which of these is a quadrilateral?', 'Trapezium', 'Hexagon', 'Pentagon'),
+    Q('In any polygon, the number of sides = the number of ........', 'vertices', 'circles', 'faces'),
+    Q('A vertex is a ........', 'corner', 'flat surface', 'curved line'),
+    Q('A polygon is a closed shape made of ........ or more line segments.', '3', '1', '2'),
+    Q('A trapezium has only ........ sides that are parallel.', '2', '4', '3'),
+    Q('I am a 2D shape with 5 sides and 5 vertices. What am I?', 'Pentagon', 'Hexagon', 'Triangle'),
+    Q('I am a 2D shape with zero vertices. What am I?', 'Circle', 'Square', 'Triangle'),
+    Q('I have 4 equal sides and I am not a square. What am I?', 'Rhombus', 'Rectangle', 'Circle')
+  ], { n: 8, note: 'Vertex = corner. Triangle: 3 sides, 3 vertices. Quadrilaterals (square, rectangle, trapezium, rhombus): 4 sides and 4 vertices. Pentagon: 5. Hexagon: 6. Circle: 0.' });
+
+  add(E, u5, 'me-length', 'Measuring Length (cm & m)', '📏', () => mk(8, () => { const n = ri(2, 9); return opts(n + ' m = ? cm', n * 100, [n * 10, n * 1000, n + 100]); }).concat([
+    Q('1 meter = ........ centimeters', '100', '10', '1000'),
+    Q('Which unit is best to measure the length of a pen?', 'Centimeter', 'Meter', 'Liter'),
+    Q('Which unit is best to measure the length of your classroom?', 'Meter', 'Centimeter', 'Liter'),
+    Q('Which unit is best to measure the length of a paperclip?', 'Centimeter', 'Meter', 'Minute'),
+    Q('Which is longer?', '2 meters', '50 centimeters', 'They are equal'),
+    Q('On a ruler, we start measuring from ........', 'Zero', 'One', 'Ten'),
+    Q('The standard units of measuring length are ........', 'centimeter and meter', 'kilogram and liter', 'hour and minute'),
+    Q('“cm” is the short form of ........', 'centimeter', 'meter', 'kilometer')
+  ]), { n: 7, note: 'Length is how long something is, from one end to the other. 1 meter (m) = 100 centimeters (cm). We start measuring from zero on the ruler.' });
+
+  add(E, u5, 'me-3d', '3D Shapes (Solids)', '🧊', [
+    Q('The flat surfaces of a solid are called ........', 'faces', 'edges', 'vertices'),
+    Q('Where two faces meet, we have an ........', 'edge', 'face', 'angle'),
+    Q('The corners of a solid are called ........', 'vertices', 'faces', 'edges'),
+    Q('A cube has ........ faces.', '6', '4', '8'),
+    Q('A cube has ........ edges.', '12', '6', '8'),
+    Q('A cube has ........ vertices.', '8', '6', '12'),
+    Q('Which solid looks like a ball?', 'Sphere', 'Cube', 'Cone'),
+    Q('Which solid looks like a dice?', 'Cube', 'Sphere', 'Cylinder'),
+    Q('Which solid looks like a can of beans?', 'Cylinder', 'Cone', 'Cube'),
+    Q('Which solid looks like a party hat?', 'Cone', 'Cylinder', 'Sphere'),
+    Q('Which solid looks like a book?', 'Cuboid', 'Sphere', 'Cone'),
+    Q('A sphere has ........ vertices.', '0', '1', '8'),
+    Q('A cone has ........ vertex.', '1', '0', '2'),
+    Q('A cylinder has ........ flat faces.', '2', '1', '6'),
+    Q('A cuboid has ........ faces.', '6', '4', '8')
+  ], { n: 8, note: 'Faces = flat surfaces. Edges = where 2 faces meet. Vertices = corners. Cube: 6 faces, 12 edges, 8 vertices. Sphere: no vertices. Cone: 1 vertex. Cylinder: 2 flat faces.' });
+})();
+
+/* ============================================================
+   English — Primary 2 — Term 1
+   المصدر: مذكرات Connect Plus + مذكرة مستر حسام عبدالله + مذكرة English we can
+   ============================================================ */
+(function () {
+  'use strict';
+  const { Q, H, V, TE, mk, ri, pickN, shuffle, rand, numWords, opts } = HAH, add = HA.add, S = 'english';
+  const U1 = 'Unit 1 · Let\'s get started', U2 = 'Unit 2 · Colors, Numbers & Shapes', U3 = 'Unit 3 · My Classroom', U4 = 'Unit 4 · Everyday Life',
+    U5 = 'Unit 5 · My Home', UG = 'Grammar Workshop', UC = 'Connect Plus Practice', UV = 'Vocabulary Bank';
+
+  /* ---------- أدوات نحوية ---------- */
+  const art = n => (/^[aeiou]/.test(n) ? 'an' : 'a');
+  const s3 = v => (/(ch|sh|s|x|o)$/.test(v) ? v + 'es' : /[^aeiou]y$/.test(v) ? v.slice(0, -1) + 'ies' : v + 's');
+  const ger = v => (v.endsWith('e') && !v.endsWith('ee') ? v.slice(0, -1) + 'ing' : v + 'ing');
+  const past = v => (v.endsWith('e') ? v + 'd' : v + 'ed');
+  const pl = n => (/(ch|sh|s|x)$/.test(n) ? n + 'es' : n + 's');
+  const IRR = { man: 'men', foot: 'feet', tooth: 'teeth', woman: 'women', child: 'children' };
+
+  /* ---------- Vocabulary Bank (English ⇄ Arabic) ---------- */
+  const vocab = (id, title, icon, pairs) => add(S, UV, id, title, icon, () => {
+    const out = [];
+    pairs.forEach(p => {
+      out.push(Q('What does “' + p[0] + '” mean?', p[1], ...pickN(pairs.filter(x => x !== p).map(x => x[1]), 2)));
+      out.push(Q('How do you say “' + p[1] + '” in English?', p[0], ...pickN(pairs.filter(x => x !== p).map(x => x[0]), 2)));
+    });
+    return out;
+  }, { n: 8, note: 'Read each word, say it aloud, and remember its picture in your mind. Press the 🔊 button to hear the question.' });
+
+  vocab('v1', 'Vocabulary 1: Classroom', '🏫', [['desk', 'مكتب'], ['chair', 'كرسي'], ['hello', 'مرحبا'], ['teacher', 'مدرس'], ['student', 'طالب'], ['name', 'إسم'], ['goodbye', 'إلى اللقاء'], ['board', 'سبورة'], ['door', 'باب'], ['bag', 'حقيبة'], ['window', 'شباك'], ['eraser', 'أستيكة'], ['ruler', 'مسطرة'], ['friend', 'صديق'], ['pencil', 'قلم رصاص'], ['pen', 'قلم جاف'], ['book', 'كتاب'], ['notebook', 'كراسة'], ['classroom', 'فصل دراسي']]);
+  vocab('v2', 'Vocabulary 2: Colors, Shapes & Things', '🎨', [['red', 'أحمر'], ['green', 'أخضر'], ['orange', 'برتقالي'], ['blue', 'أزرق'], ['square', 'مربع'], ['triangle', 'مثلث'], ['star', 'نجمة'], ['circle', 'دائرة'], ['sun', 'شمس'], ['dog', 'كلب'], ['cat', 'قطة'], ['fox', 'ثعلب'], ['box', 'صندوق'], ['cup', 'فنجان'], ['bun', 'كعكة'], ['hat', 'قبعة'], ['fan', 'مروحة'], ['man', 'رجل'], ['map', 'خريطة']]);
+  vocab('v3', 'Vocabulary 3: Actions', '🏃', [['read', 'يقرأ'], ['write', 'يكتب'], ['draw', 'يرسم'], ['clean', 'ينظف'], ['sit', 'يجلس'], ['stand', 'يقف'], ['color', 'يلون'], ['play', 'يلعب'], ['sing', 'يغني'], ['open', 'يفتح'], ['close', 'يغلق'], ['cook', 'يطبخ'], ['eat', 'يأكل'], ['sleep', 'ينام'], ['wash', 'يغسل'], ['watch', 'يشاهد'], ['help', 'يساعد'], ['walk', 'يمشي'], ['wake up', 'يستيقظ']]);
+  vocab('v4', 'Vocabulary 4: Family & Home', '🏠', [['grandfather', 'جد'], ['grandmother', 'جدة'], ['father', 'أب'], ['mother', 'أم'], ['sister', 'أخت'], ['brother', 'أخ'], ['family', 'عائلة'], ['table', 'ترابيزة'], ['bed', 'سرير'], ['lamp', 'لمبة'], ['plate', 'طبق'], ['tall', 'طويل'], ['short', 'قصير'], ['kitchen', 'مطبخ'], ['bathroom', 'حمام'], ['bedroom', 'غرفة النوم'], ['living room', 'غرفة المعيشة'], ['garden', 'حديقة'], ['balcony', 'بلكونة'], ['under', 'تحت'], ['next to', 'بجوار']]);
+  vocab('v5', 'Vocabulary 5: Places & Sounds', '🌊', [['cake', 'كيك'], ['cave', 'كهف'], ['lake', 'بحيرة'], ['snake', 'ثعبان'], ['gate', 'بوابة'], ['grapes', 'عنب'], ['sheep', 'خروف'], ['ship', 'سفينة'], ['shop', 'محل'], ['fish', 'سمكة'], ['dish', 'طبق'], ['cheese', 'جبنة'], ['chicken', 'دجاجة'], ['lunch', 'الغداء'], ['beach', 'شاطئ'], ['thin', 'نحيف'], ['thick', 'سميك'], ['thumb', 'إصبع الإبهام'], ['thunder', 'رعد'], ['teeth', 'أسنان'], ['rose', 'وردة'], ['nose', 'أنف'], ['cube', 'مكعب'], ['glue', 'صمغ']]);
+  vocab('v6', 'Vocabulary 6: Body, Jobs & Space', '🚀', [['arm', 'ذراع'], ['leg', 'ساق'], ['head', 'رأس'], ['face', 'وجه'], ['wing', 'جناح'], ['beak', 'منقار'], ['slow', 'بطيء'], ['fast', 'سريع'], ['small', 'صغير'], ['big', 'كبير'], ['farmer', 'مزارع'], ['fisherman', 'صياد'], ['chef', 'طاهٍ'], ['mechanic', 'ميكانيكي'], ['planet', 'كوكب'], ['Earth', 'الأرض'], ['Moon', 'القمر'], ['Sun', 'الشمس']]);
+
+  /* ---------- Unit 1 ---------- */
+  add(S, U1, 'e-greet', 'Greetings & Classroom Objects', '👋', [
+    Q("Someone asks: “What's your name?” You say:", "I'm Ali.", "I'm fine.", "It's a desk."),
+    Q('We say “Good ........” in the morning.', 'morning', 'night', 'afternoon'),
+    Q('We say “........” at the end of the day.', 'Goodbye', 'Hello', 'Sit down'),
+    Q('I sit on a ........ at school.', 'chair', 'board', 'door'),
+    Q('My ........ is kind. She helps me learn.', 'teacher', 'chair', 'desk'),
+    Q('At the end of the day, I say ........', 'goodbye', 'teacher', 'chair'),
+    Q('Who helps you learn new things at school?', 'My teacher', 'My desk', 'My pencil'),
+    Q('“May I sit down?” means:', 'Can I take a seat?', 'Can I go home?', 'Can I run?'),
+    Q('Hello, I\'m Ali. — ........ Mona.', "Hello, I'm", 'Goodbye,', 'Sit down,'),
+    Q('A ........ is a person who learns at school.', 'student', 'desk', 'ruler'),
+    Q('You write on a ........ in the classroom.', 'board', 'window', 'bag'),
+    Q('You put your books in your ........', 'bag', 'shoe', 'lamp')
+  ], { n: 8, note: 'Hello, I\'m Ali. What\'s your name? Good morning, Ms. Amira. May I sit down? Goodbye. I sit on a chair. My teacher is kind.' });
+
+  add(S, U1, 'e-thisthat', 'This / That / These / Those', '👉', [
+    Q('The cat is far from you. You say: ........ is a cat.', 'That', 'This', 'These'),
+    Q('The desk is near you. You say: ........ is a desk.', 'This', 'That', 'Those'),
+    Q("What's that? — ........", "That's a cat.", 'This is a fan.', "It's fine."),
+    Q("What's this? — ........", 'This is a bin.', 'That is a fig.', "I'm fine."),
+    Q('........ are my cats. (near, more than one)', 'These', 'This', 'That'),
+    Q("........ is Mona's book. (near, one)", 'This', 'These', 'Those'),
+    Q('........ are his bags. (far, more than one)', 'Those', 'This', 'That'),
+    Q('This ........ a nice girl.', 'is', 'are', 'am'),
+    Q('These ........ four boys.', 'are', 'is', 'am'),
+    Q('“That is a bee.” → negative:', "That isn't a bee.", "That not a bee.", "That aren't a bee."),
+    Q('“Those are trees.” → negative:', "Those aren't trees.", "Those isn't trees.", 'Those not trees.'),
+    Q('Is this a cat? — Yes, ........', 'it is', 'this is', 'I am'),
+    Q('Is that a book? — No, ........', "it isn't", "it aren't", "I'm not"),
+    TE('“This is” is used for something NEAR you.', true),
+    TE('“That is” is used for something NEAR you.', false)
+  ], { n: 8, note: 'This / These = near (one / more than one). That / Those = far. Negative: This isn\'t… Short form: This\'s a cat, That\'s a cat.' });
+
+  add(S, U1, 'e-be', 'Verb “to be” & a / an', '✏️', () => {
+    const A = ['board', 'window', 'ruler', 'desk', 'chair', 'book', 'bag', 'pen', 'cat', 'dog', 'fox', 'man', 'map', 'cup', 'bun', 'box', 'hat', 'fan', 'star', 'square', 'circle', 'triangle', 'door', 'horse', 'bottle'];
+    const N = ['eraser', 'orange', 'apple', 'ant', 'egg', 'elephant', 'umbrella', 'eye', 'owl', 'arm', 'ear', 'insect'];
+    const out = A.concat(N).map(n => Q('This is ........ ' + n + '.', art(n), art(n) === 'a' ? 'an' : 'a', 'two'));
+    return out.concat([
+      Q('I ........ a student.', 'am', 'is', 'are'),
+      Q('He ........ a teacher.', 'is', 'am', 'are'),
+      Q('She ........ a girl.', 'is', 'are', 'am'),
+      Q('It ........ an eraser.', 'is', 'are', 'am'),
+      Q('We ........ friends.', 'are', 'is', 'am'),
+      Q('You ........ a teacher.', 'are', 'is', 'am'),
+      Q('They ........ bags.', 'are', 'is', 'am'),
+      Q('We use “a” before a word that starts with a ........', 'consonant', 'vowel', 'number'),
+      Q('We use “an” before a word that starts with a ........', 'vowel (a, e, i, o, u)', 'consonant', 'number'),
+      Q('The vowels are ........', 'a – e – i – o – u', 'b – c – d – f – g', 'x – y – z')
+    ]);
+  }, { n: 8, note: 'I am • He / She / It is • We / You / They are. Use “a” before consonants (a board) and “an” before vowels a, e, i, o, u (an eraser, an apple).' });
+
+  /* ---------- Unit 2 ---------- */
+  add(S, U2, 'e-colors', 'Colors & Shapes', '🔺', [
+    Q('What color is the sun?', 'yellow', 'blue', 'green'),
+    Q("What color is this? — It's ........", 'red and blue', 'a square', 'two'),
+    Q('What can you see? — I can see a ........', 'green triangle', 'triangle green', 'green a triangle'),
+    Q('In English, the color comes ........ the noun.', 'before', 'after', 'in the middle'),
+    Q('Which is correct?', 'a blue square', 'a square blue', 'blue a square'),
+    Q('Which is correct?', 'a red circle', 'a circle red', 'red a circle'),
+    Q('The red circle is ........ the desk.', 'on', 'under', 'at'),
+    Q('This is a blue ........', 'square', 'squares', 'an square'),
+    Q('Which shape has 3 sides?', 'triangle', 'circle', 'square'),
+    Q('Which shape has 4 equal sides?', 'square', 'triangle', 'circle'),
+    Q('Which shape is round?', 'circle', 'square', 'triangle'),
+    Q('“Orange” is a ........ and also a fruit.', 'color', 'shape', 'number'),
+    V(Q('What shape is this?', 'star', 'circle', 'square'), '⭐'),
+    V(Q('What color is this?', 'green', 'red', 'blue'), '🟩'),
+    V(Q('What color is this?', 'blue', 'green', 'orange'), '🟦'),
+    V(Q('What color is this?', 'red', 'blue', 'orange'), '🟥')
+  ], { n: 8, note: 'Colors: red, green, orange, blue. Shapes: square, triangle, star, circle. The color comes BEFORE the noun: a blue square.' });
+
+  add(S, U2, 'e-things', 'What can you see? What do you like?', '🦊', [
+    Q('What is this? (a fox) — This is a ........', 'fox', 'foxes', 'an fox'),
+    Q('What can you see? — I can see a ........', 'box', 'boxes', 'an box'),
+    Q('What do you like? — I like a ........', 'bun', 'buns', 'an bun'),
+    Q('A ........ is a sweet food.', 'bun', 'dog', 'cup'),
+    Q('You drink tea from a ........', 'cup', 'fox', 'sun'),
+    Q('A ........ barks.', 'dog', 'cup', 'box'),
+    Q('The ........ shines in the sky in the day.', 'sun', 'bun', 'fox'),
+    Q('A ........ is an orange animal with a bushy tail.', 'fox', 'cup', 'bun'),
+    Q('I can see a white ........', 'dog', 'dogs', 'dogging'),
+    V(Q('What is this?', 'sun', 'cup', 'box'), '☀️'),
+    V(Q('What is this?', 'dog', 'fox', 'cat'), '🐶'),
+    V(Q('What is this?', 'cup', 'box', 'bun'), '☕'),
+    V(Q('What is this?', 'fox', 'dog', 'cat'), '🦊')
+  ], { n: 8, note: 'What is this? — This is a fox. What can you see? — I can see a box. What do you like? — I like a bun.' });
+
+  add(S, U2, 'e-count', 'Numbers & How many…?', '🔢', () => {
+    const IT = [['⭐', 'stars'], ['🍎', 'apples'], ['✏️', 'pencils'], ['📚', 'books'], ['🎒', 'bags'], ['🐟', 'fish'], ['🚗', 'cars'], ['🌸', 'flowers']];
+    const out = mk(12, () => {
+      const it = rand(IT), c = ri(1, 10), wrong = shuffle([c + 1, c - 1, c + 2, c - 2].filter(x => x >= 1 && x <= 12)).slice(0, 3);
+      return Object.assign(opts('How many ' + it[1] + ' are there?', numWords(c), wrong.map(numWords)), { visual: it[0].repeat(c) });
+    });
+    const nums = mk(6, () => { const n = ri(1, 12), w = shuffle([n + 1, n - 1, n + 2].filter(x => x >= 0)).slice(0, 3); return opts('Which number is “' + numWords(n) + '”?', n, w); });
+    return out.concat(nums, [
+      Q('“How many” is followed by a ........ noun.', 'plural', 'singular', 'number'),
+      Q('How many pencils are there? — There are ........ pencils.', 'two', 'a', 'an'),
+      Q('There ........ three notebooks.', 'are', 'is', 'am'),
+      Q('One bag, three ........', 'bags', 'bag', 'bagses')
+    ]);
+  }, { n: 8, note: 'one 1 • two 2 • three 3 • four 4 • five 5 • six 6 • seven 7 • eight 8 • nine 9 • ten 10. After “How many…?” use a plural noun: How many books are there?' });
+
+  add(S, U2, 'e-plural', 'Singular & Plural', '📚', () => {
+    const N = ['cat', 'tree', 'bee', 'pen', 'pencil', 'book', 'boy', 'head', 'bag', 'ruler', 'desk', 'chair', 'dog', 'fox', 'arm', 'leg', 'eye', 'knee', 'bottle', 'ant', 'sister', 'mother', 'father', 'snake', 'grape', 'cake', 'lake', 'gate', 'window', 'lamp'];
+    const out = N.map(n => {
+      const p = pl(n), w = shuffle([n, n + "'s", n + 'es', 'a ' + n].filter(x => x !== p)).slice(0, 2);
+      return Q('One ' + n + ', two ........', p, ...w);
+    });
+    Object.keys(IRR).forEach(k => out.push(Q('One ' + k + ', two ........', IRR[k], k + 's', k + 'es')));
+    return out.concat([
+      Q('To make most nouns plural, add ........', 's', 'ing', 'ed'),
+      Q('For nouns ending in ch, sh, s, x we add ........', 'es', 's', 'ing'),
+      Q('Which word is plural?', 'bags', 'bag', 'a bag')
+    ]);
+  }, { n: 8, note: 'Add s to make a noun plural: one bag → three bags. Some words change: one foot → two feet, one tooth → two teeth, one man → two men.' });
+
+  /* ---------- Unit 3 ---------- */
+  add(S, U3, 'e-cont', 'Present Continuous (am / is / are + ing)', '🎬', () => {
+    const SU = [['I', 'am'], ['He', 'is'], ['She', 'is'], ['It', 'is'], ['We', 'are'], ['You', 'are'], ['They', 'are'], ['Ali', 'is'], ['The girls', 'are'], ['My mom', 'is']];
+    const VB = [['read', 'a book'], ['draw', 'a picture'], ['play', 'football'], ['sing', 'a song'], ['clean', 'the desk'], ['color', 'the star'], ['open', 'the door'], ['write', 'my name'], ['close', 'the window'], ['listen', 'to music'], ['watch', 'TV'], ['eat', 'breakfast']];
+    return mk(20, () => {
+      const su = rand(SU), vb = rand(VB), bes = ['am', 'is', 'are'].filter(b => b !== su[1]);
+      return Q(su[0] + ' ........ ' + vb[1] + ' now. (' + vb[0] + ')', su[1] + ' ' + ger(vb[0]), rand(bes) + ' ' + ger(vb[0]), s3(vb[0]));
+    }).concat([
+      Q('We form the present continuous with am / is / are + verb + ........', 'ing', 's', 'ed'),
+      Q('We are ........ pictures now.', 'drawing', 'draw', 'draws'),
+      Q('She is ........ a book.', 'reading', 'read', 'reads'),
+      Q("I'm ........", 'writing', 'write', 'writes'),
+      Q('He is ........ with friends.', 'playing', 'play', 'plays')
+    ]);
+  }, { n: 8, note: 'I am • He / She / It is • We / You / They are + verb + ing. Example: She is reading a book. We are drawing pictures now.' });
+
+  add(S, U3, 'e-commands', 'Classroom Commands & Actions', '🙋', [
+    Q('Teacher says “Stand up.” You ........', 'stand', 'sit', 'sleep'),
+    Q('Teacher says “Sit down.” You ........', 'sit', 'stand', 'run'),
+    Q('Teacher says “Open your book.” You ........', 'open your book', 'close your book', 'clean your desk'),
+    Q('Teacher says “Close your book.” You ........', 'close your book', 'open your book', 'draw a circle'),
+    Q('Teacher says “Raise your hand.” You lift your ........', 'hand', 'book', 'chair'),
+    Q('Teacher says “Write your name.” You need a ........', 'pencil', 'ball', 'cup'),
+    Q('Teacher says “Draw a circle.” You draw a ........ shape.', 'round', 'square', 'three-sided'),
+    Q('What do you do in the classroom? — I ........', 'read', 'sleep in bed', 'swim'),
+    Q('Which action needs a pencil?', 'write', 'clap', 'sing'),
+    Q('When we sing we use our ........', 'voice', 'hands only', 'feet only'),
+    Q('Clap means ........', 'to hit your hands together', 'to sleep', 'to open'),
+    Q('I read my book. I write in my ........', 'notebook', 'window', 'door'),
+    Q('I sit on my ........', 'chair', 'board', 'door'),
+    Q('I clean my ........', 'desk', 'sky', 'moon'),
+    Q('I play with my ........', 'friends', 'chair', 'window')
+  ], { n: 8, note: 'stand up • sit down • open your book • close your book • raise your hand • write your name • draw a circle • clap. In class I read, write, draw and play with my friends.' });
+
+  /* ---------- Unit 4 ---------- */
+  add(S, U4, 'e-family', 'Family: my / your', '👨‍👩‍👧', [
+    Q('Your mother\'s mother is your ........', 'grandmother', 'sister', 'cousin'),
+    Q('Your father\'s father is your ........', 'grandfather', 'brother', 'uncle'),
+    Q('Your mom and dad are your ........', 'parents', 'cousins', 'grandchildren'),
+    Q('Your uncle\'s son is your ........', 'cousin', 'brother', 'father'),
+    Q('Who is this? — This is ........ mother. (I speak)', 'my', 'your', 'she'),
+    Q('That is ........ bed. (it is yours)', 'your', 'my', 'me'),
+    Q('This is ........ father. (I speak)', 'my', 'your', 'you'),
+    Q('My bed means the bed of ........', 'me', 'you', 'him'),
+    Q('Your bed means the bed of ........', 'you', 'me', 'them'),
+    Q('The opposite of “tall” is ........', 'short', 'round', 'small'),
+    Q('The opposite of “short” is ........', 'tall', 'thin', 'thick'),
+    Q('My ........ has short black hair. (my dad / my parents)', 'dad', 'parents', 'grandchildren'),
+    Q('I have a mum and a dad. They are my ........', 'parents', 'cousins', 'sisters'),
+    Q('My brother is two years old. He is a ........', 'baby', 'grandpa', 'teacher')
+  ], { n: 8, note: 'my = mine (my mother, my bed). your = yours (your father, your bed). Family: grandfather, grandmother, father, mother, sister, brother, cousin.' });
+
+  const VP = { walk: 'to school', eat: 'breakfast', play: 'football', ride: 'a bike', drink: 'milk', read: 'a book', come: 'to school early', meet: 'friends', watch: 'TV', wash: 'the dishes', brush: 'teeth', go: 'to bed early', study: 'English', fly: 'a kite', teach: 'Math', clean: 'the room', cook: 'dinner', sleep: 'at night', help: 'my mom', listen: 'to music' };
+  const genPS = () => {
+    const SU = ['I', 'You', 'We', 'They', 'Ali and Mona', 'He', 'She', 'It', 'Ahmed', 'My mother', 'The teacher', 'The cat'];
+    const single = ['He', 'She', 'It', 'Ahmed', 'My mother', 'The teacher', 'The cat'];
+    return mk(24, () => {
+      const su = rand(SU), v = rand(Object.keys(VP)), one = single.indexOf(su) >= 0;
+      const ok = one ? s3(v) : v, bad = one ? v : s3(v);
+      return H(Q(su + ' ........ ' + VP[v] + ' every day. (' + v + ')', ok, bad, ger(v)), 'I / We / You / They + verb.  He / She / It + verb + s / es.');
+    });
+  };
+  add(S, U4, 'e-ps', 'Present Simple: verb + s / es', '📅', () => genPS().concat([
+    Q('If the subject is he, she or it, we add ........ to the verb.', 's / es', 'ing', 'ed'),
+    Q('For verbs ending in ch, sh, s, o, x we add ........', 'es', 's', 'ies'),
+    Q('For verbs ending in a consonant + y (study), we change y to ........', 'ies', 'ys', 'yes'),
+    Q('For verbs ending in a vowel + y (play), we add ........', 's', 'ies', 'es'),
+    Q('Ahmed ........ football after school.', 'plays', 'play', 'playes'),
+    Q('Leen ........ to school every day.', 'walks', 'walk', 'walking'),
+    Q('Ahmed and Leen ........ football after school.', 'play', 'plays', 'playes'),
+    Q('I wake up at 7 o\'clock. She ........ up at 7 o\'clock.', 'wakes', 'wake', 'waking')
+  ]), { n: 8, note: 'I / We / You / They + verb (I eat). He / She / It + verb + s (he eats). After ch, sh, s, o, x add es: watches, brushes, goes. Consonant + y → ies: study → studies.' });
+
+  /* ---------- Unit 5 ---------- */
+  add(S, U5, 'e-rooms', 'Rooms in My Home', '🛏️', [
+    Q('Where do you sleep?', 'In the bedroom', 'In the kitchen', 'In the garden'),
+    Q('Where does mom cook?', 'In the kitchen', 'In the bathroom', 'In the bedroom'),
+    Q('Where do you brush your teeth?', 'In the bathroom', 'In the kitchen', 'In the garden'),
+    Q('Where do you watch TV?', 'In the living room', 'In the bathroom', 'In the garden'),
+    Q('Where do you play with your friends?', 'In the garden', 'In the bathroom', 'In the kitchen'),
+    Q('We eat lunch in the ........', 'dining room', 'bathroom', 'balcony'),
+    Q('The ........ has a bed in it.', 'bedroom', 'kitchen', 'bathroom'),
+    Q('The ........ has a table and chairs to eat.', 'dining room', 'bedroom', 'balcony'),
+    Q('Which room is for cooking?', 'kitchen', 'bedroom', 'hall'),
+    Q('Which room is for washing?', 'bathroom', 'kitchen', 'garden'),
+    Q('The kitchen is in the ........', 'house', 'sky', 'sea'),
+    Q('I play in the ........ (outside the house)', 'garden', 'bedroom', 'bathroom')
+  ], { n: 8, note: 'bedroom (sleep) • bathroom (brush teeth) • kitchen (cook) • living room (watch TV) • dining room (eat) • garden (play) • balcony • hall.' });
+
+  add(S, U5, 'e-prep', 'Where is…? in / on / under / next to', '📍', [
+    Q('Where is the chair? — The chair is ........ the table. (beside it)', 'next to', 'under', 'on'),
+    Q('Where is the ball? — The ball is ........ the table. (below it)', 'under', 'on', 'next to'),
+    Q('Where is the bed? — The bed is ........ the bedroom.', 'in', 'on', 'under'),
+    Q('I play ........ the garden.', 'in', 'on', 'at'),
+    Q('The book is ........ the desk. (on top)', 'on', 'in', 'under'),
+    Q('The cat is ........ the box. (inside)', 'in', 'on', 'next to'),
+    Q('“under” means ........', 'below something', 'on top of something', 'beside something'),
+    Q('“next to” means ........', 'beside', 'below', 'above'),
+    Q('We use “in” with the sea, Cairo, a village and ........', 'Egypt', 'the hotel', 'the bank'),
+    Q('We use “at” with buildings like ........', 'the hotel, bank, hospital', 'Egypt', 'the sea'),
+    Q('He is ........ the hotel.', 'at', 'on', 'in'),
+    Q('There is a name ........ the door.', 'on', 'in', 'at'),
+    Q('There is a picture ........ the wall.', 'on', 'in', 'at'),
+    Q('I was ........ London.', 'in', 'on', 'at'),
+    Q('We pray ........ the masjid.', 'in', 'on', 'under'),
+    Q('They are sailing ........ the sea.', 'in', 'at', 'under')
+  ], { n: 8, note: 'in = inside or big places (in the sea, in Cairo). on = on top (on the desk, on the wall). at = buildings (at the hotel). under = below. next to = beside.' });
+
+  add(S, U5, 'e-there', 'There is / There are', '✅', () => {
+    const SG = ['cat', 'dog', 'book', 'tree', 'bee', 'fox', 'car', 'horse', 'man', 'bottle', 'ant', 'nose', 'bed', 'kitchen', 'lamp', 'window'];
+    const out = [];
+    SG.forEach(n => {
+      out.push(Q('There ........ ' + art(n) + ' ' + n + '.', 'is', 'are', 'am'));
+      out.push(Q('There ........ ' + pl(n) + '.', 'are', 'is', 'am'));
+    });
+    for (let i = 0; i < 8; i++) {
+      const n = rand(SG);
+      out.push(Q('There ........ ' + art(n) + ' ' + n + '. (negative)', "isn't", "aren't", 'not'));
+      out.push(Q('........ there ' + art(n) + ' ' + n + '?', 'Is', 'Are', 'Am'));
+      out.push(Q('........ there ' + pl(n) + '?', 'Are', 'Is', 'Am'));
+    }
+    return out.concat([
+      Q('Is there a book? — Yes, ........', 'there is', 'there are', 'it does'),
+      Q("Are there cows? — No, ........", "there aren't", "there isn't", "they doesn't"),
+      Q('There is + ........ noun', 'singular', 'plural', 'no'),
+      Q('There are + ........ noun', 'plural', 'singular', 'no'),
+      Q('There ........ salad.', 'is', 'are', 'am'),
+      Q('There ........ six bees.', 'are', 'is', 'am'),
+      Q('There are ........ in the kitchen. (dishes / a dish)', 'dishes', 'a dish', 'a dishes')
+    ]);
+  }, { n: 8, note: 'There is + singular noun (There is a bed). There are + plural noun (There are two chairs). Negative: There isn\'t a car / There aren\'t cars. Question: Is there…? Are there…?' });
+
+  add(S, U5, 'e-home-actions', 'What do you do at home?', '🧹', [
+    Q('What do you do at home? — I ........ my room.', 'clean', 'cleans', 'cleaning'),
+    Q('I ........ my mom.', 'help', 'helps', 'helping'),
+    Q('Who cooks dinner? — My ........ cooks dinner.', 'mom', 'chair', 'lamp'),
+    Q('My mother ........ dinner.', 'cooks', 'cook', 'cooking'),
+    Q('I ........ my sister clean.', 'help', 'sleep', 'eat'),
+    Q('My father ........ TV.', 'watches', 'watch', 'watching'),
+    Q('I ........ my room. (clean)', 'clean', 'cleans', 'cleaned'),
+    Q('Who is helping? — “........ helps mom.” (a girl)', 'She', 'I am', 'They are'),
+    Q('We wash the ........ in the kitchen.', 'dishes', 'bed', 'garden'),
+    Q('I sleep at ........', 'night', 'lunch', 'school'),
+    Q('Ahmed ........ TV in the living room.', 'watches', 'watch', 'watchs'),
+    Q('Leen ........ her teeth in the morning.', 'brushes', 'brush', 'brushs')
+  ], { n: 8, note: 'What do you do at home? — I clean my room. I help my mom. Who cooks dinner? — My mom cooks dinner. He watches TV. She brushes her teeth.' });
+
+  add(S, UG, 'e-phonics', 'Phonics & Rhymes', '🎵', [
+    Q('Which word rhymes with “cat”?', 'hat', 'pen', 'fig'),
+    Q('Which word rhymes with “pen”?', 'hen', 'cap', 'zip'),
+    Q('Which word rhymes with “fig”?', 'bin', 'cat', 'ten'),
+    Q('Which word rhymes with “cake”?', 'lake', 'cave', 'cat'),
+    Q('Which word rhymes with “rose”?', 'nose', 'cube', 'glue'),
+    Q('Which word starts with the “sh” sound?', 'ship', 'thin', 'cheese'),
+    Q('Which word starts with the “th” sound?', 'thumb', 'sheep', 'chin'),
+    Q('Which word starts with the “ch” sound?', 'cheese', 'shop', 'thick'),
+    Q('Which word has the “sh” sound?', 'fish', 'fan', 'fig'),
+    Q('Which word has the “ch” sound?', 'lunch', 'lamp', 'lake'),
+    Q('Which word ends with the “th” sound?', 'math', 'map', 'man'),
+    Q('The “b” in “thumb” is ........', 'silent', 'loud', 'a vowel'),
+    Q('Which word has a short “a” sound?', 'man', 'cake', 'gate'),
+    Q('Which word has a long “a” sound?', 'lake', 'cat', 'fan'),
+    Q('“thin” is the opposite of ........', 'thick', 'big', 'tall')
+  ], { n: 8, note: 'Words with the same ending sound rhyme: cat – hat, pen – hen, cake – lake, rose – nose. Special sounds: sh (ship, fish), ch (cheese, lunch), th (thumb, thin, math).' });
+
+  add(S, UG, 'e-order', 'Build the Sentence', '🧩', () => {
+    const SEN = ['This is a desk.', 'He is a teacher.', 'This is a bag.', 'This is a pencil.', 'This is a book.', 'This is a red circle.', 'This is a blue square.', 'What is this?', 'How many pens are there?', 'There are eight books.', 'I walk to school.', 'I play tennis after school.', 'I ride my bike.', 'Is this your ball?', 'What is she doing?', 'She is reading a book.', 'I have two sisters.', 'Good morning, Mrs. Sara.', 'I get up at seven o\'clock.', 'How are you?', 'I\'m fine, thank you.', 'I love my school.', 'My teacher is kind.', 'The cat plays with the ball.', 'He has two arms.'];
+    const scr = arr => { let s; for (let k = 0; k < 20; k++) { s = shuffle(arr); if (s.join(' ') !== arr.join(' ')) return s; } return arr.slice().reverse(); };
+    return SEN.map(sn => {
+      const end = sn.slice(-1), core = sn.slice(0, -1), words = core.split(' ');
+      const shown = scr(words).join(' / ') + end;
+      const w = []; let guard = 0;
+      while (w.length < 2 && guard++ < 40) { const c = scr(words).join(' ') + end; if (c !== sn && w.indexOf(c) < 0) w.push(c); }
+      return Q('Reorder the words: ' + shown, sn, ...w);
+    });
+  }, { n: 8, note: 'A sentence starts with a capital letter, has the words in the right order, and ends with a full stop (.) or a question mark (?).' });
+
+  /* ---------- Connect Plus practice ---------- */
+  add(S, UC, 'c-time', 'Greetings & Telling the Time', '🕐', [
+    Q("It's 7 am. Good ........", 'morning', 'afternoon', 'evening'),
+    Q("It's 3 pm. Good ........", 'afternoon', 'morning', 'night'),
+    Q("It's 7 pm. Good ........", 'evening', 'afternoon', 'morning'),
+    Q('It is time for bed. We say Good ........', 'night', 'morning', 'afternoon'),
+    Q('We eat ........ in the morning.', 'breakfast', 'dinner', 'lunch'),
+    Q('We eat ........ in the afternoon.', 'lunch', 'breakfast', 'dinner'),
+    Q('We eat ........ in the evening.', 'dinner', 'breakfast', 'lunch'),
+    Q('How are you? — ........', "I'm fine, thank you.", "I'm eight.", "It's one o'clock."),
+    Q("What's the time? — ........", "It's one o'clock.", "I'm fine.", "I'm Ali."),
+    Q("What's your name? — ........", "I'm Ali.", "I'm fine.", "It's seven o'clock."),
+    V(Q("It's 8:30. What's the time?", "It's half past eight.", "It's eight o'clock.", "It's half eight."), '🕣'),
+    V(Q("What's the time?", "It's one o'clock.", "It's half past one.", "It's two o'clock."), '🕐'),
+    V(Q("What's the time?", "It's three o'clock.", "It's half past three.", "It's four o'clock."), '🕒'),
+    Q('Hello, Ali. How are you? — I\'m ........, thank you.', 'fine', 'eight', 'morning'),
+    Q('See you ........', 'soon', 'okay', 'fine'),
+    Q('Good afternoon, Mom. — ........ Ali.', 'Good afternoon', 'Good morning', 'Good night'),
+    Q('Is this your ball? — Yes, ........', 'it is', "I'm fine", 'I do')
+  ], { n: 8, note: 'Good morning (6 am – 11 am) • Good afternoon (12 pm – 6 pm) • Good evening (6 pm – 10 pm) • Good night (bedtime). What\'s the time? — It\'s seven o\'clock. It\'s half past eight.' });
+
+  add(S, UC, 'c-do', 'Do / Does / Don\'t / Doesn\'t', '❔', [
+    Q('Do you have a cousin? — Yes, ........', 'I do', 'I does', 'I am'),
+    Q('Does she have a sister? — Yes, she ........', 'does', 'do', 'is'),
+    Q('Does he walk to school? — No, he ........', "doesn't", "don't", "isn't"),
+    Q('Do they have an uncle? — No, they ........', "don't", "doesn't", 'do'),
+    Q("I ........ swim well. (I can't)", "don't", "doesn't", 'not'),
+    Q('You ........ speak English. (negative)', "don't", "doesn't", "isn't"),
+    Q('He ........ write stories. (negative)', "doesn't", "don't", 'not'),
+    Q('She ........ teach Math. (negative)', "doesn't", "don't", "aren't"),
+    Q('It ........ live in Egypt. (negative)', "doesn't", "don't", "isn't"),
+    Q('We ........ play the piano. (negative)', "don't", "doesn't", "isn't"),
+    Q('........ she drink milk?', 'Does', 'Do', 'Is'),
+    Q('........ you ride a bike?', 'Do', 'Does', 'Are'),
+    Q('Do you play tennis? — Yes, I ........', 'do', 'does', "don't"),
+    Q('Does she ride a bike? — No, she ........', "doesn't", "don't", 'not')
+  ], { n: 8, note: 'I / You / We / They → Do … ? Yes, I do. / No, I don\'t. He / She / It → Does … ? Yes, she does. / No, she doesn\'t.' });
+
+  add(S, UC, 'c-body', 'Unit 2 · Body Parts & Adjectives', '🦒', [
+    Q('The cat has one white ........ (foot / beak)', 'foot', 'beak', 'wing'),
+    Q('My grandmother is ........ (young / old)', 'old', 'young', 'small'),
+    Q('The baby is ........ (old / young)', 'young', 'old', 'slow'),
+    Q('The tortoise is ........ (slow / fast)', 'slow', 'fast', 'funny'),
+    Q('Hoopoes are ........ birds. (big / small)', 'small', 'big', 'slow'),
+    Q('Their ........ help them find insects. (beaks / wings)', 'beaks', 'wings', 'feet'),
+    Q('Crocodiles have ........ (claws / wings)', 'claws', 'wings', 'beaks'),
+    Q('Snakes have no ........ (legs / eyes)', 'legs', 'eyes', 'heads'),
+    Q('A butterfly has four ........ (wings / legs)', 'wings', 'legs', 'arms'),
+    Q('The frog often ........ (jumps / walks)', 'jumps', 'flies', 'swims in the sky'),
+    Q('I have two ........ (feet / foot)', 'feet', 'foot', 'foots'),
+    Q('One tooth, two ........', 'teeth', 'tooths', 'toothes'),
+    Q('The opposite of “slow” is ........', 'fast', 'small', 'old'),
+    Q('The opposite of “small” is ........', 'big', 'slow', 'young'),
+    Q('An elephant is big and ........', 'slow', 'tiny', 'fly'),
+    Q('Birds have two wings and a ........', 'beak', 'trunk', 'shell')
+  ], { n: 8, note: 'Body words: arm, beak, face, foot – feet, tooth – teeth, leg, wing, head, talon. Opposites: slow ✕ fast, small ✕ big, old ✕ young.' });
+
+  add(S, UC, 'c-jobs', 'Unit 3 · Jobs: What does he do?', '👩‍🍳', [
+    Q('A farmer works on a ........', 'farm', 'hospital', 'school'),
+    Q('A chef works in a ........', 'restaurant', 'farm', 'fire station'),
+    Q('Firefighters work in a ........', 'fire station', 'kitchen', 'hotel'),
+    Q('A doctor works in a ........', 'hospital', 'farm', 'garden'),
+    Q('A ........ helps sick people.', 'doctor', 'farmer', 'chef'),
+    Q("What does he do? — ........", "He's a farmer.", "He's fine.", "He's five."),
+    Q("What does she do? — ........", "She's a teacher.", "She's fine.", "She's at home."),
+    Q('What do you want to be? — I want to be ........ engineer.', 'an', 'a', 'the'),
+    Q('My mom works in a hotel. She ........ people.', 'helps', 'help', 'helping'),
+    Q('She ........ on the phone.', 'talks', 'talk', 'talking'),
+    Q('She sends ........', 'e-mails', 'fish', 'trees'),
+    Q('A web designer uses a ........', 'computer', 'boat', 'ball'),
+    Q('A fisherman catches ........', 'fish', 'cars', 'books'),
+    Q('A mechanic fixes ........', 'cars', 'fish', 'trees'),
+    Q('They work in an ........', 'office', 'ocean', 'apple')
+  ], { n: 8, note: 'What does she do? — She\'s a teacher. What does he do? — He\'s a farmer. What do you want to be? — I want to be an engineer.' });
+
+  add(S, UC, 'c-space', 'Unit 4 · Planets & Ordinal Numbers', '🪐', [
+    Q('Mercury is the ........ planet from the Sun.', 'first', 'one', 'second'),
+    Q('Venus is the ........ planet from the Sun.', 'second', 'two', 'third'),
+    Q('Earth is the ........ planet from the Sun.', 'third', 'three', 'fourth'),
+    Q('Mars is the ........ planet from the Sun.', 'fourth', 'four', 'fifth'),
+    Q('Jupiter is the ........ planet from the Sun.', 'fifth', 'five', 'sixth'),
+    Q('Saturn is the ........ planet from the Sun.', 'sixth', 'six', 'seventh'),
+    Q('Uranus is the ........ planet from the Sun.', 'seventh', 'seven', 'eighth'),
+    Q('Neptune is the ........ planet from the Sun.', 'eighth', 'eight', 'ninth'),
+    Q('The ........ is bigger than all the planets.', 'Sun', 'Moon', 'Earth'),
+    Q('The Earth is blue and ........', 'green', 'red', 'gray'),
+    Q('Mars is ........', 'red', 'blue', 'green'),
+    Q('Jupiter is brown and ........', 'gray', 'blue', 'red'),
+    Q('Venus is the ........ planet.', 'hottest', 'hot', 'hotter'),
+    Q('Earth is ........ than Jupiter.', 'smaller', 'bigger', 'biggest'),
+    Q('Jupiter is ........ than Earth.', 'bigger', 'smaller', 'small'),
+    Q('Which planet is the third from the Sun?', 'Earth', 'Mars', 'Venus')
+  ], { n: 8, note: '1st Mercury • 2nd Venus • 3rd Earth • 4th Mars • 5th Jupiter • 6th Saturn • 7th Uranus • 8th Neptune. big → bigger, small → smaller, hot → hottest.' });
+
+  add(S, UC, 'c-was', 'Unit 5 · was / were & There was / There were', '⏪', [
+    Q('There ........ a parrot on the tree.', 'was', 'were', 'is'),
+    Q('There ........ some birds near the river.', 'were', 'was', 'is'),
+    Q('We ........ on a boat trip yesterday.', 'were', 'was', 'are'),
+    Q('The turtle ........ brown and green.', 'was', 'were', 'are'),
+    Q('Crocodiles ........ on the river bank.', 'were', 'was', 'is'),
+    Q('Was there a hippo? — No, there ........', "wasn't", "weren't", "isn't"),
+    Q('There weren\'t ........ owls on the tree.', 'any', 'some', 'a'),
+    Q('There are ........ toys in my room.', 'some', 'any', 'an'),
+    Q('I ........ a student last year.', 'was', 'were', 'am'),
+    Q('He ........ at home yesterday.', 'was', 'were', 'is'),
+    Q('They ........ my best friends before.', 'were', 'was', 'are'),
+    Q('........ he sad? — No, he wasn\'t.', 'Was', 'Were', 'Is'),
+    Q('You ........ outside yesterday.', 'were', 'was', 'are'),
+    Q('I ........ ill yesterday. (negative)', "wasn't", "weren't", "am not"),
+    Q('We use “was / were” to talk about the ........', 'past', 'future', 'present')
+  ], { n: 8, note: 'I / He / She / It → was (wasn\'t). We / You / They → were (weren\'t). There was + singular. There were + plural. Use “some” in positive and “any” in negative.' });
+
+  add(S, UC, 'c-past', 'Unit 6 · Past Simple (regular verbs)', '⌛', () => {
+    const PV = { stay: 'at home', play: 'football', visit: 'the museum', travel: 'to Alexandria', clean: 'the room', watch: 'TV', cook: 'dinner', want: 'a new bike', look: 'at the statue', enjoy: 'the party', cross: 'the bridge', work: 'in the garden', listen: 'to music', use: 'the computer', color: 'the picture', wash: 'the dishes', open: 'the door', close: 'the window' };
+    const NM = ['Ali', 'Mona', 'Nilly', 'Dad', 'Mum', 'We', 'They', 'Sam and Tom'];
+    return mk(24, () => {
+      const v = rand(Object.keys(PV)), p = v === 'travel' ? 'traveled' : past(v);
+      return H(Q('Yesterday, ' + rand(NM) + ' ........ ' + PV[v] + '. (' + v + ')', p, v, ger(v)), 'Regular verbs: add ed (or d if the verb ends with e).');
+    }).concat([
+      Q('We use the past simple to talk about actions in the ........', 'past', 'future', 'present'),
+      Q('Which word is a key word for the past?', 'yesterday', 'tomorrow', 'now'),
+      Q('Which word is a key word for the past?', 'last week', 'next week', 'every day'),
+      Q('Which word is a key word for the past?', 'three days ago', 'tonight', 'today'),
+      Q('The past of “play” is ........', 'played', 'plays', 'playing'),
+      Q('The past of “stay” is ........', 'stayed', 'stay', 'stayes')
+    ]);
+  }, { n: 8, note: 'Past simple (regular verbs): add ed → play – played, stay – stayed, visit – visited. If the verb ends with e add d → close – closed. Key words: yesterday, last week, ago.' });
+})();
+
+/* ============================================================
+   Discover — Science — Primary 2 — First Term
+   المصدر: Geel 2000 Language Schools — Science Department (2025-2026)
+   ============================================================ */
+(function () {
+  'use strict';
+  const { Q, V, TE } = HAH, add = HA.add, S = 'discover';
+  const A = 'Living Things', B = 'Food & Health', C = 'Sky, Light & Shadows', D = 'Habitats & Matter';
+
+  add(S, A, 'd1', 'Lesson 1 · Human Life Cycle', '👶', [
+    Q('We change as we ........', 'grow', 'sleep', 'shrink'),
+    Q('Which is the first stage of the human life cycle?', 'Baby', 'Adult', 'Teenager'),
+    Q('Which stage comes after “child”?', 'Teenager', 'Baby', 'Adult'),
+    Q('Which is the last stage of the human life cycle?', 'Adult', 'Baby', 'Child'),
+    Q('The stages of the human life cycle in order are ........', 'baby → child → teenager → adult', 'adult → teenager → child → baby', 'child → baby → adult → teenager'),
+    Q('A baby is also called an ........', 'offspring', 'adult', 'egg'),
+    Q('Humans come to our world by ........', 'birth', 'laying eggs', 'growing from seeds'),
+    Q('Who takes care of a human baby?', 'Parents', 'Nobody', 'Only the teacher'),
+    V(Q('Which stage is this?', 'Baby', 'Adult', 'Teenager'), '👶'),
+    V(Q('Which stage is this?', 'Adult', 'Baby', 'Child'), '🧑'),
+    TE('Humans change as they grow.', true),
+    TE('An adult is younger than a child.', false)
+  ], { n: 6, note: 'Human life cycle: Baby (offspring) → Child → Teenager → Adult. Humans come to our world by birth, and parents take care of them.' });
+
+  add(S, A, 'd2', 'Lesson 2 · A Bird Life Cycle', '🐣', [
+    Q('The bird life cycle in order is ........', 'egg → nestling → young bird → adult bird', 'adult bird → egg → young bird → nestling', 'young bird → egg → adult bird → nestling'),
+    Q('Birds come to our world by ........', 'laying eggs', 'birth', 'seeds'),
+    Q('The mother bird sits on the eggs to keep them ........', 'warm', 'cold', 'wet'),
+    Q('The mother bird feeds its ........', 'baby bird', 'eggs', 'nest'),
+    Q('Where do the eggs stay?', 'In the nest', 'In the water', 'In the sand only'),
+    Q('Which stage comes first in a bird life cycle?', 'Egg', 'Adult bird', 'Young bird'),
+    Q('Which stage comes last in a bird life cycle?', 'Adult bird', 'Egg', 'Nestling'),
+    Q('How do birds move?', 'They fly and walk', 'They only swim', 'They only crawl'),
+    Q('Who cares about baby birds?', 'Parents', 'Nobody', 'Fish'),
+    V(Q('What is this?', 'Egg', 'Adult bird', 'Nest'), '🥚'),
+    V(Q('What is this?', 'Baby bird (nestling)', 'Egg', 'Adult bird'), '🐣'),
+    V(Q('What is this?', 'Adult bird', 'Egg', 'Baby bird'), '🐦'),
+    TE('Baby birds come out of eggs.', true),
+    TE('Humans and birds come to our world in the same way.', false)
+  ], { n: 6, note: 'Bird life cycle: Egg → Baby bird (nestling) → Young bird → Adult bird. Birds lay eggs and can fly; humans come by birth and walk.' });
+
+  add(S, A, 'd3', 'Lesson 3 · The Bird\'s Body', '🦅', [
+    Q('The bird\'s ........ help it to see and find food (insects).', 'eyes', 'wings', 'legs'),
+    Q('The bird\'s ........ helps it to eat and feed its baby bird.', 'beak', 'wings', 'eyes'),
+    Q('The bird\'s ........ help it to fly in the air and obtain food.', 'wings', 'legs', 'beak'),
+    Q('Birds use their ........ to stand and walk.', 'legs', 'wings', 'eyes'),
+    Q('Birds use their ........ to hold things and catch food.', 'claws', 'beak', 'eyes'),
+    Q('Which body part helps a bird to fly?', 'Wings', 'Beak', 'Claws'),
+    Q('Which body part helps a bird to see?', 'Eyes', 'Beak', 'Legs'),
+    Q('Which body part helps a bird to eat?', 'Beak', 'Wings', 'Eyes'),
+    TE('A bird uses its wings to see.', false),
+    TE('A bird uses its beak to eat and feed its babies.', true)
+  ], { n: 6, note: 'Eyes: see and find food. Beak: eat and feed baby birds. Wings: fly. Legs: stand and walk. Claws: hold and catch.' });
+
+  add(S, A, 'd4', 'Lesson 4 · Body Parts Help Animals Get Food', '🐸', [
+    Q('The caracal uses its ........ to hear the approaching prey.', 'ears', 'tongue', 'neck'),
+    Q('The frog uses its ........ to catch insects.', 'tongue', 'ears', 'neck'),
+    Q('The giraffe uses its long ........ to reach tall trees.', 'neck', 'tongue', 'tail'),
+    Q('Which animal uses its tongue to catch insects?', 'Frog', 'Giraffe', 'Caracal'),
+    Q('Which animal uses its long neck to reach food?', 'Giraffe', 'Frog', 'Caracal'),
+    Q('Which animal uses its ears to hear prey?', 'Caracal', 'Giraffe', 'Frog'),
+    V(Q('This animal eats leaves from tall trees. Which body part helps it?', 'Long neck', 'Tongue for insects', 'Big ears'), '🦒'),
+    V(Q('This animal catches insects. Which body part helps it?', 'Tongue', 'Long neck', 'Wings'), '🐸'),
+    TE('Animals\' body parts help them get food.', true)
+  ], { n: 6, note: 'Caracal: ears hear the prey. Frog: tongue catches insects. Giraffe: long neck reaches tall trees.' });
+
+  add(S, A, 'd5', 'Lesson 5 · The Golden Eagle', '🦅', [
+    Q('The golden eagle has large ........ to fly fast through the air.', 'wings', 'ears', 'paws'),
+    Q('It has good ........ to see the prey.', 'eyesight', 'hearing', 'smell'),
+    Q('It uses its strong ........ to eat.', 'beak', 'tail', 'neck'),
+    Q('It has strong talons (claws) to ........', 'catch and carry its prey', 'swim', 'dig holes'),
+    Q('Which is food for the golden eagle?', 'Rabbits and mice', 'Grass', 'Leaves'),
+    Q('The golden eagle catches deer, foxes, mice and ........', 'rabbits', 'carrots', 'apples'),
+    TE('The golden eagle has weak talons.', false),
+    TE('Big wings help the eagle fly fast.', true)
+  ], { n: 6, note: 'Golden eagle: large wings (fly fast), good eyesight (see prey), strong beak (eat), strong talons (catch and carry prey).' });
+
+  add(S, B, 'd6', 'Lesson 6 · Food Groups', '🍎', [
+    Q('Fruits, vegetables, oil and nuts come from ........', 'plants', 'animals', 'rocks'),
+    Q('Eggs, milk, honey, chicken and meat come from ........', 'animals', 'plants', 'rocks'),
+    Q('Bread, cereal, rice and pasta give us ........', 'energy', 'bones', 'colors'),
+    Q('Meat, fish, eggs and beans help to ........ our muscles.', 'build and repair', 'break', 'hide'),
+    Q('Milk, yogurt and cheese make our bones and ........ strong.', 'teeth', 'hair', 'nails'),
+    Q('Fruits contain ........ that help us stay healthy.', 'vitamins', 'rocks', 'oil'),
+    Q('Vegetables help us ........ food and get rid of waste.', 'digest', 'draw', 'fly'),
+    V(Q('This food comes from ........', 'plants', 'animals', 'the sea only'), '🍎'),
+    V(Q('This food comes from ........', 'animals', 'plants', 'rocks'), '🥚'),
+    V(Q('This food comes from ........', 'animals', 'plants', 'sand'), '🥛'),
+    V(Q('This food comes from ........', 'plants', 'animals', 'the moon'), '🥕'),
+    Q('Which food gives us energy?', 'Rice', 'Water', 'Air'),
+    Q('Which food makes bones strong?', 'Cheese', 'Candy', 'Chips'),
+    TE('Honey comes from plants.', false),
+    TE('Milk comes from animals.', true)
+  ], { n: 8, note: 'Plant foods: fruits, vegetables, oil, nuts. Animal foods: eggs, milk, honey, chicken, meat. Bread & rice give energy. Meat & beans build muscles. Milk & cheese build bones & teeth. Fruits give vitamins.' });
+
+  add(S, B, 'd7', 'Lesson 6 · Keeping Food Safe & Healthy', '🧼', [
+    Q('Vegetables that grow in the ground must be ........ before eating.', 'cleaned', 'painted', 'thrown away'),
+    Q('We must eat ........ food.', 'fresh', 'expired', 'spoiled'),
+    Q('We must avoid eating ........ or spoiled food.', 'expired', 'fresh', 'clean'),
+    Q('You must clean your hands ........ touching food.', 'before and after', 'never', 'only after'),
+    Q('Fresh banana is ........', 'healthy', 'unhealthy', 'not food'),
+    Q('Over-ripe banana is ........', 'unhealthy', 'healthy', 'fresh'),
+    Q('Fresh milk is ........', 'healthy', 'unhealthy', 'expired'),
+    Q('Expired or spoiled milk is ........', 'unhealthy', 'healthy', 'fresh'),
+    Q('A carrot from the soil is very ........', 'dirty', 'clean', 'cooked'),
+    Q('Which is the best way to clean a carrot?', 'Using water', 'Rubbing it in the soil', 'Leaving it dirty'),
+    TE('Vegetables can be eaten without washing.', false),
+    TE('I can drink juice which is expired.', false),
+    TE('I can eat fresh food that is clean.', true)
+  ], { n: 8, note: 'Wash vegetables that grow in the ground. Eat fresh food and avoid expired or spoiled food. Clean your hands before and after touching food.' });
+
+  add(S, C, 'd8', 'Lesson 7 · Observing the Sky', '🔭', [
+    Q('I use the sense of ........ to observe the sky.', 'sight', 'smell', 'taste'),
+    Q('A planetarium is a ........ cinema of space.', '3D', 'sports', 'cooking'),
+    Q('A constellation is a group of ........ that form a pattern in the sky.', 'stars', 'clouds', 'birds'),
+    Q('A telescope helps us to see very ........ objects in the sky.', 'far', 'near', 'small'),
+    Q('During the day, I can see the ........ and clouds in the sky.', 'sun', 'moon', 'stars'),
+    Q('During the night, I can see the moon and ........ in the sky.', 'stars', 'sun', 'rainbows'),
+    Q('Which do we see in the sky during the day?', 'Sun', 'Stars', 'Moon and stars'),
+    Q('Which do we see in the sky at night?', 'Moon and stars', 'Sun', 'Only clouds'),
+    V(Q('What is this tool used for?', 'To see far objects in the sky', 'To cook food', 'To measure length'), '🔭'),
+    TE('A telescope helps us see stars and planets.', true)
+  ], { n: 6, note: 'Planetarium = 3D cinema of space. Constellation = group of stars that form a pattern. Telescope = helps us see very far objects. Day: sun and clouds. Night: moon and stars.' });
+
+  add(S, C, 'd9', 'Lesson 8 · Sun, Moon & Shadows', '☀️', [
+    Q('The sun is a ........', 'star', 'planet', 'moon'),
+    Q('The main source of light on Earth is the ........', 'sun', 'moon', 'candle'),
+    Q('The moonlight is the ........ of the sunlight.', 'reflection', 'shadow', 'color'),
+    Q('You can feel warmth in winter when you sit in the ........', 'sun rays', 'shadow', 'dark room'),
+    Q('The three things needed for a shadow are a light source, an object and a ........', 'surface', 'rainbow', 'cloud'),
+    Q('A shadow forms when an object ........ the light.', 'blocks', 'makes', 'eats'),
+    Q('For a shadow to appear, the object must be between the ........ and the surface.', 'light source', 'moon', 'ground only'),
+    Q('When you walk on a sunny day you see a dark area that is your ........', 'shadow', 'reflection', 'star'),
+    TE('The moon makes its own light.', false),
+    TE('The sun is a star.', true),
+    V(Q('What makes the shadow of this boy?', 'The sun and his body', 'The moon only', 'Nothing'), '🧍')
+  ], { n: 6, note: 'The sun is a star and our main source of light. Moonlight is the reflection of sunlight. A shadow needs 3 things: a light source, an object blocking the light, and a surface.' });
+
+  add(S, C, 'd10', 'Lessons 9 & 10 · Size, Distance & Light', '🌌', [
+    Q('The size of an object doesn\'t change. It looks smaller or bigger depending on the ........', 'distance', 'color', 'shadow'),
+    Q('An object looks smaller when it is ........', 'far', 'close', 'wet'),
+    Q('An object looks bigger when it is ........', 'close', 'far', 'dry'),
+    Q('The light looks dimmer (weaker) when it is ........', 'far', 'close', 'blue'),
+    Q('The light looks strong when it is ........', 'close', 'far', 'green'),
+    Q('The ........ is brighter than other stars.', 'sun', 'moon', 'planet'),
+    Q('Stars look dimmer than the sun because stars are ........ from us.', 'far', 'close', 'small'),
+    Q('The dots and shapes in a space picture are ........', 'galaxies', 'lamps', 'clouds'),
+    Q('We live in a galaxy called the ........', 'Milky Way', 'Big Way', 'Sun Way'),
+    Q('A galaxy is where the sun, planets and ........ exist.', 'moons', 'cars', 'houses'),
+    Q('A ........ is used to see stars, planets and moons.', 'telescope', 'ruler', 'spoon'),
+    TE('The sun looks bigger than the stars because it is closer.', true),
+    TE('Far lights look brighter than close lights.', false)
+  ], { n: 8, note: 'Objects look smaller when they are far and bigger when they are close. Light looks dimmer when it is far (stars) and stronger when it is close (the sun). We live in the Milky Way galaxy.' });
+
+  add(S, D, 'd11', 'Lesson 11 · Habitats', '🏜️', [
+    Q('A habitat is a place with a suitable ........ for a group of animals and plants to live in.', 'environment', 'kitchen', 'toy'),
+    Q('Which of these is an environment?', 'Desert', 'Chair', 'Pencil'),
+    Q('Which is NOT an environment?', 'Chair', 'Forest', 'Coastal area'),
+    Q('Which environment is highly densely populated?', 'City', 'Desert', 'Forest'),
+    V(Q('A camel lives in the ........', 'desert', 'forest', 'sea'), '🐪'),
+    V(Q('A cow lives in an ........ environment.', 'agricultural', 'industrial', 'desert'), '🐄'),
+    V(Q('A fish lives in the ........', 'water (sea)', 'desert', 'city street'), '🐟'),
+    V(Q('A monkey lives in the ........', 'forest', 'desert', 'factory'), '🐒'),
+    Q('The six environments are desert, agricultural, forest, coastal, industrial and ........', 'city', 'kitchen', 'space'),
+    Q('Factories are found in the ........ environment.', 'industrial', 'desert', 'forest'),
+    Q('Farms are found in the ........ environment.', 'agricultural', 'coastal', 'industrial'),
+    Q('Beaches and the sea are the ........ environment.', 'coastal', 'desert', 'forest'),
+    TE('An animal can be found in more than one environment.', true)
+  ], { n: 8, note: 'A habitat is a place with a suitable environment for animals and plants. Environments: desert, agricultural, forest, coastal, industrial and city.' });
+
+  add(S, D, 'd12', 'Lesson 12 · Let\'s Inflate a Balloon', '🎈', [
+    Q('When baking soda is blended with vinegar, it produces ........ gas.', 'CO₂ (carbon dioxide)', 'oxygen', 'helium only'),
+    Q('What do we use to inflate the balloon in the experiment?', 'Baking soda and vinegar', 'Sand and water', 'Salt and sugar'),
+    Q('First, we use a funnel to add ........ cup baking soda to the balloon.', '1/3', '1/2', '3'),
+    Q('The plastic bottle is filled with about 1 cup of ........', 'vinegar', 'milk', 'oil'),
+    Q('The balloon is attached to the ........ of the plastic bottle.', 'mouth', 'bottom', 'cap'),
+    Q('When the baking soda falls into the bottle, the balloon ........', 'inflates (gets bigger)', 'shrinks', 'disappears'),
+    Q('The gas that inflates the balloon takes up ........', 'space', 'no place', 'water only'),
+    TE('Baking soda and vinegar make a gas.', true),
+    TE('The balloon stays flat during the experiment.', false)
+  ], { n: 6, note: 'Baking soda + vinegar make carbon dioxide (CO₂) gas. The gas fills the balloon and makes it bigger.' });
+
+  add(S, D, 'd13', 'Lesson 13 · Materials & Senses', '🧱', [
+    Q('Which material is transparent (you can see through it)?', 'Glass', 'Wood', 'Metal'),
+    Q('Which material is used to make a pencil?', 'Wood', 'Glass', 'Water'),
+    Q('Which material is used to make a bike tire?', 'Rubber', 'Glass', 'Paper'),
+    Q('A spoon is made of ........', 'metal', 'water', 'air'),
+    Q('A plastic bottle is made of ........', 'plastic', 'wood', 'metal'),
+    Q('Materials we see around us include plastic, rubber, wood, glass and ........', 'metal', 'air', 'sound'),
+    Q('The five senses are sight, smell, taste, touch and ........', 'hearing', 'walking', 'sleeping'),
+    Q('We use our eyes for the sense of ........', 'sight', 'smell', 'hearing'),
+    Q('We use our nose for the sense of ........', 'smell', 'taste', 'touch'),
+    Q('We use our tongue for the sense of ........', 'taste', 'hearing', 'sight'),
+    Q('We use our skin for the sense of ........', 'touch', 'smell', 'sight'),
+    Q('We use our ears for the sense of ........', 'hearing', 'taste', 'touch'),
+    V(Q('Which sense do you use to enjoy this smell?', 'Smell', 'Hearing', 'Sight'), '🌹'),
+    V(Q('Which sense do you use to enjoy this music?', 'Hearing', 'Taste', 'Smell'), '🎸'),
+    V(Q('Which sense do you use to enjoy this taste?', 'Taste', 'Hearing', 'Sight'), '🍋')
+  ], { n: 8, note: 'Materials: plastic, rubber, wood, glass, metal. Senses: sight (eyes), smell (nose), taste (tongue), touch (skin), hearing (ears).' });
+
+  add(S, D, 'd14', 'Lesson 14 · Changes of Matter', '🧊', [
+    Q('The three states of matter are solid, liquid and ........', 'gas', 'stone', 'light'),
+    Q('Ice is a ........', 'solid', 'liquid', 'gas'),
+    Q('Water is a ........', 'liquid', 'solid', 'gas'),
+    Q('Steam (vapor) is a ........', 'gas', 'solid', 'liquid'),
+    Q('When ice is heated it changes to ........', 'water', 'steam', 'stone'),
+    Q('When water is cooled it changes to ........', 'ice', 'steam', 'air'),
+    Q('When water is heated it changes to ........', 'vapor (steam)', 'ice', 'sand'),
+    Q('When vapor is cooled it changes to ........', 'water', 'ice cream', 'smoke'),
+    Q('Solid → Liquid happens by ........', 'heating', 'cooling', 'shaking'),
+    Q('Liquid → Solid happens by ........', 'cooling', 'heating', 'painting'),
+    Q('Liquid → Vapor happens by ........', 'heating', 'cooling', 'freezing'),
+    Q('Vapor → Liquid happens by ........', 'cooling', 'heating', 'melting'),
+    V(Q('What state of matter is this?', 'Solid', 'Liquid', 'Gas'), '🧊'),
+    V(Q('What state of matter is this?', 'Liquid', 'Solid', 'Gas'), '💧'),
+    V(Q('What state of matter is this?', 'Gas', 'Solid', 'Liquid'), '♨️'),
+    V(Q('What state of matter is this book?', 'Solid', 'Liquid', 'Gas'), '📚'),
+    V(Q('What state of matter is inside this balloon?', 'Gas', 'Solid', 'Liquid'), '🎈')
+  ], { n: 8, note: 'Solid (ice) — Liquid (water) — Gas (vapor/steam). Heating: solid → liquid → vapor. Cooling: vapor → liquid → solid.' });
+})();
+
+HA.start();
+</script>
+</body>
+</html>
